@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import type { ItemType } from 'ant-design-vue'
-import { computed, h, ref, watch } from 'vue'
+import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { findNode, menus, type MenuNode } from '../config/menus'
 import { useAppStore } from '../stores/app'
@@ -46,9 +46,33 @@ const today = new Intl.DateTimeFormat('zh-CN', {
   weekday: 'long',
 }).format(new Date())
 
+const isNarrow = ref(false)
+let viewportQuery: MediaQueryList | undefined
+
+function onViewportChange(event?: MediaQueryListEvent) {
+  const matches = event?.matches ?? viewportQuery?.matches ?? false
+  const enteredNarrow = matches && !isNarrow.value
+  const leftNarrow = !matches && isNarrow.value
+  isNarrow.value = matches
+  if (enteredNarrow) app.collapsed = true
+  if (leftNarrow) app.collapsed = false
+}
+
+onMounted(() => {
+  viewportQuery = window.matchMedia('(max-width: 960px)')
+  onViewportChange()
+  viewportQuery.addEventListener('change', onViewportChange)
+})
+
+onUnmounted(() => {
+  viewportQuery?.removeEventListener('change', onViewportChange)
+})
+
 function onMenuClick(info: { key: string | number }) {
   const node = findNode(menus, String(info.key))
-  if (node?.path) void router.push(node.path)
+  if (!node?.path) return
+  void router.push(node.path)
+  if (isNarrow.value) app.collapsed = true
 }
 </script>
 
@@ -58,7 +82,7 @@ function onMenuClick(info: { key: string | number }) {
       v-model:collapsed="app.collapsed"
       class="admin-sider"
       :width="248"
-      :collapsed-width="80"
+      :collapsed-width="isNarrow ? 0 : 80"
       collapsible
       :trigger="null"
       theme="dark"
@@ -81,6 +105,13 @@ function onMenuClick(info: { key: string | number }) {
         />
       </div>
     </a-layout-sider>
+    <button
+      v-if="isNarrow && !app.collapsed"
+      class="sider-mask"
+      type="button"
+      aria-label="关闭菜单"
+      @click="app.collapsed = true"
+    />
 
     <a-layout class="admin-body">
       <a-layout-header class="admin-header">
@@ -315,9 +346,30 @@ function onMenuClick(info: { key: string | number }) {
   }
 }
 
-@media (max-width: 760px) {
-  .today,
-  .duty em {
+.sider-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  padding: 0;
+  background: rgba(8, 18, 32, 0.48);
+  border: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 960px) {
+  .admin-shell {
+    position: relative;
+  }
+
+  .admin-sider {
+    position: absolute !important;
+    z-index: 40;
+    height: 100%;
+  }
+
+  .skeleton-tag,
+  .duty,
+  .today {
     display: none;
   }
 
