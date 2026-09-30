@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
 import { scenes } from '../config/scenes'
 import { useScreenStore } from '../stores/screen'
 
-const route = useRoute()
 const screen = useScreenStore()
 
 onMounted(() => screen.start())
@@ -59,11 +57,7 @@ onUnmounted(() => screen.stop())
       </nav>
 
       <main>
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <component :is="Component" :key="route.fullPath" />
-          </transition>
-        </router-view>
+        <router-view />
       </main>
 
       <footer>
@@ -317,16 +311,6 @@ footer b {
   background: #e2b657;
   border-radius: 50%;
   box-shadow: 0 0 8px #e2b657;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 
 @keyframes grid-pan {

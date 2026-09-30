@@ -146,11 +146,7 @@ function onMenuClick(info: { key: string | number }) {
         </div>
       </a-layout-header>
       <a-layout-content class="admin-content">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <component :is="Component" :key="route.fullPath" />
-          </transition>
-        </router-view>
+        <router-view />
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -325,16 +321,6 @@ function onMenuClick(info: { key: string | number }) {
   background-color: #e8eef5;
   background-image: radial-gradient(rgba(20, 54, 92, 0.09) 1px, transparent 1px);
   background-size: 22px 22px;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.18s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 
 @keyframes pulse {
