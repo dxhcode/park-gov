@@ -1,0 +1,19 @@
+{
+  "name": "park-gov",
+  "private": true,
+  "version": "0.1.0",
+  "description": "园区政府管理平台前端原型",
+  "scripts": {
+    "dev:admin": "pnpm --filter admin-app dev",
+    "dev:screen": "pnpm --filter screen-app dev",
+    "build": "pnpm -r --if-present build",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "pages:build": "node scripts/pages-build.mjs",
+    "pages:preview": "node scripts/pages-preview.mjs",
+    "pages:publish": "node scripts/pages-publish.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.33.3"
+}

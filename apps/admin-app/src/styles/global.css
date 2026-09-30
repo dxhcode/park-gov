@@ -1,0 +1,22 @@
+:root {
+  color: #14283f;
+  background: #e8eef5;
+  font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
