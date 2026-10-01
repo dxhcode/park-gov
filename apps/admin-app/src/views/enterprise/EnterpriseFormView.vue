@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { FormInstance } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import { message } from 'ant-design-vue'
 import { computed, reactive, ref, watch } from 'vue'
@@ -19,7 +18,6 @@ import { useRegistryStore } from '../../stores/registry'
 const route = useRoute()
 const router = useRouter()
 const registry = useRegistryStore()
-const formRef = ref<FormInstance>()
 
 const recordId = computed(() => (typeof route.params.id === 'string' ? route.params.id : ''))
 const editing = computed(() => Boolean(recordId.value))
@@ -75,6 +73,14 @@ const rules: Record<string, Rule[]> = {
 }
 
 watch(
+  () => form.creditCode,
+  (value) => {
+    const next = value.trim().toUpperCase()
+    if (next !== value) form.creditCode = next
+  },
+)
+
+watch(
   () => form.parkId,
   (parkId) => {
     const options = buildingsInPark(parkId)
@@ -115,10 +121,6 @@ watch(
   { immediate: true },
 )
 
-function normalizeCredit() {
-  form.creditCode = form.creditCode.trim().toUpperCase()
-}
-
 function back() {
   if (recordId.value) {
     void router.push({ name: 'enterprise-directory-detail', params: { id: recordId.value } })
@@ -127,13 +129,7 @@ function back() {
   void router.push({ name: 'enterprise-directory' })
 }
 
-async function onSubmit() {
-  normalizeCredit()
-  try {
-    await formRef.value?.validate()
-  } catch {
-    return
-  }
+function onFinish() {
   const saved = registry.saveEnterprise({ ...form, status: form.status as EnterpriseStatus }, recordId.value || undefined)
   if (!saved) {
     message.error('没有找到要修改的企业')
@@ -157,7 +153,7 @@ async function onSubmit() {
     </a-result>
 
     <a-card v-else class="panel" :bordered="false">
-      <a-form ref="formRef" layout="vertical" :model="form" :rules="rules" @submit.prevent="onSubmit">
+      <a-form layout="vertical" :model="form" :rules="rules" @finish="onFinish">
         <a-row :gutter="16">
           <a-col :xs="24" :md="12">
             <a-form-item label="企业名称" name="name">
@@ -166,7 +162,7 @@ async function onSubmit() {
           </a-col>
           <a-col :xs="24" :md="12">
             <a-form-item label="统一社会信用代码" name="creditCode">
-              <a-input v-model:value="form.creditCode" placeholder="18 位，如 91330108MOCK00013X" @blur="normalizeCredit" />
+              <a-input v-model:value="form.creditCode" placeholder="18 位，如 91330108MOCK00013X" />
             </a-form-item>
           </a-col>
           <a-col :xs="24" :md="12">
