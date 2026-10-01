@@ -1,6 +1,14 @@
 :root {
-  color: #14283f;
-  background: #e8eef5;
+  --park-color-primary: #0c4f8a;
+  --park-color-accent: #0e1320;
+  --park-color-highlight: #e2b657;
+  --park-color-bg: #e8eef5;
+  --park-color-text: #14283f;
+  --park-header-bg: #0e1628;
+  --park-header-text: #f4f7ff;
+  --park-sider-bg: #10243f;
+  color: var(--park-color-text);
+  background: var(--park-color-bg);
   font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", sans-serif;
   font-synthesis: none;
@@ -19,4 +27,15 @@ button,
 input,
 textarea {
   font-family: inherit;
+}
+
+.module-banner .ant-btn-background-ghost {
+  color: #f3d48a;
+  background: transparent;
+  border-color: rgba(243, 212, 138, 0.75);
+}
+
+.module-banner .ant-btn-background-ghost:hover {
+  color: #fff8e8 !important;
+  border-color: #f3d48a !important;
 }

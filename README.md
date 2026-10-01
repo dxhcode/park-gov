@@ -1,6 +1,6 @@
 # 园区政府管理平台（park-gov）
 
-Day 1 前端脚手架：pnpm monorepo 里的两个 Vue 应用。管理端是带深色侧栏的政务工作台，态势端是暗色科技大屏。菜单和路由已经铺满，页面内容是占位，没有登录、接口、图表或地图。
+Day 2 在 Day 1 脚手架上接入了管理端登录，以及企业名录、空间用房、闲置三条可点击的本地台账。态势大屏仍是场景占位。没有真实接口，也还没有发布 GitHub Pages。
 
 ## 目录
 
@@ -17,7 +17,26 @@ pnpm install
 pnpm dev:admin     # http://localhost:5173/park-gov/admin/
 pnpm dev:screen    # http://localhost:5174/park-gov/screen/
 pnpm build         # 分别构建两个应用
+pnpm typecheck
 ```
+
+## 管理端登录
+
+未登录访问管理端会回到登录页。会话写在 `localStorage` 的 `park-gov.session`。三位演示账号密码都是 `Park@2026`：
+
+| 用户名 | 姓名 | 单位与岗位 |
+| --- | --- | --- |
+| `chenqm` | 陈启明 | 园区管理委员会 · 值班席 |
+| `zhoulan` | 周岚 | 经济发展局 · 企业监管专员 |
+| `liucheng` | 刘澄 | 规划建设局 · 空间监管专员 |
+
+顶栏可以退出登录，或把企业、用房、闲置恢复成初始样例。台账修改写在 `park-gov.registry.v1`，退出登录不会清掉。
+
+## 已接通的台账
+
+企业监管里的企业名录，空间监管里的用房和闲置，都有列表、详情和新建/编辑。园区、楼宇、企业样例的字段对齐 `park-shared` 的 `@park/mock`（滨江云栖、临港智造、光谷生命），用房和闲置是政府端扩展。信用代码和电话都是虚构的。
+
+风险画像、用地，以及工作台、考核、政策、投诉、报送、统计、设置，仍是占位页。
 
 ## 管理端菜单
 
@@ -93,4 +112,4 @@ PAGES_PUBLISH=1 pnpm pages:publish
 
 ## 技术栈
 
-Vue 3、TypeScript、Vue Router、Pinia、ant-design-vue、Vite。状态只放了侧栏折叠和态势时钟，没有业务数据。
+Vue 3、TypeScript、Vue Router、Pinia、ant-design-vue、Vite。管理端登录和企业、用房、闲置台账都是浏览器本地数据；态势端仍只有场景时钟。

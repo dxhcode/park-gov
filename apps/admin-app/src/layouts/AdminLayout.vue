@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import type { ItemType } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { findNode, menus, type MenuNode } from '../config/menus'
 import { useAppStore } from '../stores/app'
+import { useAuthStore } from '../stores/auth'
+import { useRegistryStore } from '../stores/registry'
 
 const route = useRoute()
 const router = useRouter()
 const app = useAppStore()
+const auth = useAuthStore()
+const registry = useRegistryStore()
 
 function toItems(nodes: MenuNode[]): ItemType[] {
   return nodes.map((node) => {
@@ -23,7 +28,10 @@ function toItems(nodes: MenuNode[]): ItemType[] {
 }
 
 const menuItems = computed(() => toItems(menus))
-const selectedKeys = computed(() => (route.name ? [String(route.name)] : []))
+const selectedKeys = computed(() => {
+  const key = route.meta.menuKey ?? route.name
+  return key ? [String(key)] : []
+})
 const openKeys = ref(menus.filter((node) => node.children?.length).map((node) => node.key))
 
 watch(
@@ -38,6 +46,8 @@ watch(
 const title = computed(() => route.meta.title ?? '')
 const group = computed(() => route.meta.group ?? '')
 const showGroup = computed(() => group.value && group.value !== title.value)
+const user = computed(() => auth.user)
+const surname = computed(() => user.value?.displayName.slice(0, 1) ?? '园')
 
 const today = new Intl.DateTimeFormat('zh-CN', {
   year: 'numeric',
@@ -74,6 +84,18 @@ function onMenuClick(info: { key: string | number }) {
   void router.push(node.path)
   if (isNarrow.value) app.collapsed = true
 }
+
+function onUserMenu(info: { key: string | number }) {
+  if (info.key === 'logout') {
+    auth.logout()
+    void router.replace({ name: 'login' })
+    return
+  }
+  if (info.key === 'reset') {
+    registry.reset()
+    message.success('已恢复初始样例数据')
+  }
+}
 </script>
 
 <template>
@@ -104,6 +126,7 @@ function onMenuClick(info: { key: string | number }) {
           @click="onMenuClick"
         />
       </div>
+      <p v-show="!app.collapsed" class="sider-foot">本地演示 · 数据不落库</p>
     </a-layout-sider>
     <button
       v-if="isNarrow && !app.collapsed"
@@ -135,14 +158,22 @@ function onMenuClick(info: { key: string | number }) {
           </div>
         </div>
         <div class="header-right">
-          <a-tag class="skeleton-tag">界面骨架</a-tag>
-          <div class="duty">
-            <span class="pulse" aria-hidden="true" />
-            <div>
-              <strong>{{ app.orgName }}</strong>
-              <em>{{ app.dutyLabel }}</em>
-            </div>
-          </div>
+          <a-tag class="demo-tag">本地演示</a-tag>
+          <a-dropdown v-if="user" placement="bottomRight">
+            <button class="user-chip" type="button">
+              <span class="avatar">{{ surname }}</span>
+              <span class="user-meta">
+                <strong>{{ user.displayName }}</strong>
+                <em>{{ user.orgName }} · {{ user.dutyLabel }}</em>
+              </span>
+            </button>
+            <template #overlay>
+              <a-menu @click="onUserMenu">
+                <a-menu-item key="reset">恢复样例数据</a-menu-item>
+                <a-menu-item key="logout">退出登录</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
       </a-layout-header>
       <a-layout-content class="admin-content">
@@ -155,15 +186,15 @@ function onMenuClick(info: { key: string | number }) {
 <style scoped>
 .admin-shell {
   height: 100%;
-  background: #e8eef5;
+  background: var(--park-color-bg, #e8eef5);
 }
 
 .admin-sider {
   background:
-    radial-gradient(circle at 20% 0%, rgba(64, 148, 214, 0.28), transparent 42%),
-    linear-gradient(180deg, #10243f 0%, #0b182b 48%, #08131f 100%) !important;
-  border-right: 1px solid rgba(226, 182, 87, 0.28);
-  box-shadow: 8px 0 32px rgba(8, 20, 36, 0.18);
+    radial-gradient(circle at 18% 0%, rgba(64, 148, 214, 0.32), transparent 42%),
+    linear-gradient(180deg, #152847 0%, #0e1b30 46%, #0a1424 100%) !important;
+  border-right: 1px solid rgba(226, 182, 87, 0.32);
+  box-shadow: 8px 0 32px rgba(8, 20, 36, 0.22);
 }
 
 .admin-sider :deep(.ant-layout-sider-children) {
@@ -222,7 +253,7 @@ function onMenuClick(info: { key: string | number }) {
 .menu-scroll {
   flex: 1;
   overflow: auto;
-  padding: 12px 8px 24px;
+  padding: 12px 8px 16px;
 }
 
 .menu-scroll :deep(.ant-menu) {
@@ -232,6 +263,15 @@ function onMenuClick(info: { key: string | number }) {
 
 .menu-scroll :deep(.ant-menu-item-selected) {
   box-shadow: inset 3px 0 0 #e2b657;
+}
+
+.sider-foot {
+  margin: 0;
+  padding: 12px 16px 16px;
+  color: rgba(226, 182, 87, 0.72);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  border-top: 1px solid rgba(226, 182, 87, 0.18);
 }
 
 .admin-body {
@@ -246,9 +286,21 @@ function onMenuClick(info: { key: string | number }) {
   height: 72px;
   padding: 0 20px 0 8px;
   line-height: 1.2;
-  background: rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid rgba(16, 48, 84, 0.08);
-  backdrop-filter: blur(10px);
+  background:
+    linear-gradient(90deg, rgba(226, 182, 87, 0.45), transparent 32%),
+    linear-gradient(180deg, #15233a 0%, #0e1628 100%);
+  border-bottom: 1px solid rgba(226, 182, 87, 0.38);
+  box-shadow: 0 12px 28px rgba(8, 16, 32, 0.16);
+}
+
+.admin-header :deep(.ant-breadcrumb),
+.admin-header :deep(.ant-breadcrumb a),
+.admin-header :deep(.ant-breadcrumb-separator) {
+  color: rgba(244, 247, 255, 0.68);
+}
+
+.admin-header :deep(.ant-breadcrumb li:last-child) {
+  color: #f4f7ff;
 }
 
 .header-left,
@@ -262,57 +314,67 @@ function onMenuClick(info: { key: string | number }) {
 .fold {
   width: 40px;
   height: 40px;
-  color: #0c4f8a;
+  color: #f4d78a;
   font-size: 18px;
+}
+
+.fold:hover {
+  color: #fff8e8 !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
 .today {
   margin: 4px 0 0;
-  color: #6d8298;
+  color: rgba(243, 212, 138, 0.78);
   font-size: 12px;
 }
 
-.skeleton-tag {
+.demo-tag {
   margin: 0;
-  color: #8a6414;
-  background: rgba(226, 182, 87, 0.18);
-  border-color: rgba(166, 124, 18, 0.35);
+  color: #f3d48a;
+  background: rgba(226, 182, 87, 0.12);
+  border-color: rgba(226, 182, 87, 0.45);
 }
 
-.duty {
+.user-chip {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 12px 6px 10px;
-  background: #f4f7fb;
-  border: 1px solid rgba(12, 79, 138, 0.1);
+  padding: 4px 12px 4px 4px;
+  color: #f7fbff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(226, 182, 87, 0.4);
   border-radius: 999px;
+  cursor: pointer;
 }
 
-.duty strong,
-.duty em {
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: #1a1408;
+  font-weight: 700;
+  background: linear-gradient(160deg, #f3d48a, #c6a15b);
+  border-radius: 50%;
+}
+
+.user-meta strong,
+.user-meta em {
   display: block;
   font-style: normal;
+  text-align: left;
 }
 
-.duty strong {
-  color: #16324e;
+.user-meta strong {
+  color: #f7fbff;
   font-size: 13px;
 }
 
-.duty em {
+.user-meta em {
   margin-top: 2px;
-  color: #7b8ea3;
+  color: rgba(232, 240, 248, 0.62);
   font-size: 12px;
-}
-
-.pulse {
-  width: 8px;
-  height: 8px;
-  background: #d7a326;
-  border-radius: 50%;
-  box-shadow: 0 0 0 0 rgba(215, 163, 38, 0.7);
-  animation: pulse 2.2s ease-out infinite;
 }
 
 .admin-content {
@@ -321,15 +383,6 @@ function onMenuClick(info: { key: string | number }) {
   background-color: #e8eef5;
   background-image: radial-gradient(rgba(20, 54, 92, 0.09) 1px, transparent 1px);
   background-size: 22px 22px;
-}
-
-@keyframes pulse {
-  70% {
-    box-shadow: 0 0 0 8px rgba(215, 163, 38, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(215, 163, 38, 0);
-  }
 }
 
 .sider-mask {
@@ -353,8 +406,8 @@ function onMenuClick(info: { key: string | number }) {
     height: 100%;
   }
 
-  .skeleton-tag,
-  .duty,
+  .demo-tag,
+  .user-meta,
   .today {
     display: none;
   }
