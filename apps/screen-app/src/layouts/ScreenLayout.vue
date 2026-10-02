@@ -57,13 +57,17 @@ onUnmounted(() => screen.stop())
       </nav>
 
       <main>
-        <router-view />
+        <router-view v-slot="{ Component, route: childRoute }">
+          <transition name="scene-swap" mode="out-in">
+            <component :is="Component" :key="childRoute.path" />
+          </transition>
+        </router-view>
       </main>
 
       <footer>
         <span><b />链路待命</span>
-        <span>界面骨架 · 未接入业务数据</span>
-        <span>图表 / 地图 / 接口待接入</span>
+        <span>玻璃占位 · 不展示驾驶舱</span>
+        <span>地图 / 图表 / 指标舱留待第四日</span>
       </footer>
     </div>
   </div>
@@ -285,6 +289,19 @@ onUnmounted(() => screen.stop())
 main {
   flex: 1;
   min-height: 0;
+}
+
+.scene-swap-enter-active,
+.scene-swap-leave-active {
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.scene-swap-enter-from,
+.scene-swap-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
 }
 
 footer {

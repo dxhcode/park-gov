@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import EmptyState from '../../components/EmptyState.vue'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
@@ -59,6 +60,13 @@ function openEdit(id: string) {
   void router.push({ name: 'space-idle-edit', params: { id } })
 }
 
+function clearFilters() {
+  keyword.value = ''
+  parkId.value = undefined
+  kind.value = undefined
+  reviveStatus.value = undefined
+}
+
 const pagination = {
   pageSize: 8,
   showTotal: (total: number) => `共 ${total} 条`,
@@ -102,7 +110,22 @@ const pagination = {
           :options="reviveStatuses.map((item) => ({ value: item, label: item }))"
         />
       </div>
-      <a-table :columns="columns" :data-source="rows" :pagination="pagination" row-key="id" :scroll="{ x: 980 }">
+      <EmptyState
+        v-if="rows.length === 0"
+        description="没有符合条件的闲置记录。"
+        action-label="清空筛选"
+        secondary-label="新建闲置"
+        @action="clearFilters"
+        @secondary="router.push({ name: 'space-idle-create' })"
+      />
+      <a-table
+        v-else
+        :columns="columns"
+        :data-source="rows"
+        :pagination="pagination"
+        row-key="id"
+        :scroll="{ x: 980 }"
+      >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'name'">
             <a @click.prevent="openDetail(record.id)">{{ record.name }}</a>

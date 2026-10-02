@@ -27,7 +27,7 @@ export const menus: MenuNode[] = [
     title: '工作台',
     icon: DashboardOutlined,
     path: '/workbench',
-    hint: '汇集待办、预警与当日监管要点。当前仅保留工作台版式，业务数据尚未接入。',
+    hint: '待办、预警与会商记在同一张清单里。本地样例可查、可改。',
     slots: ['待办事项', '预警摘要', '快捷入口'],
   },
   {
@@ -46,7 +46,7 @@ export const menus: MenuNode[] = [
         key: 'enterprise-risk',
         title: '风险画像',
         path: '/enterprise/risk',
-        hint: '按企业汇聚经营、安全与信用风险信号。画像数据尚未接入。',
+        hint: '按企业汇聚经营、安全、信用与环保风险信号。本地样例可查、可改。',
         slots: ['风险等级', '异常信号', '处置跟踪'],
       },
     ],
@@ -60,7 +60,7 @@ export const menus: MenuNode[] = [
         key: 'space-land',
         title: '用地',
         path: '/space/land',
-        hint: '园区用地供应、规划用途与实际利用对照。地块数据尚未接入。',
+        hint: '园区用地供应、规划用途与实际利用对照。本地样例可查、可改。',
         slots: ['地块台账', '用途对照', '供应进度'],
       },
       {
@@ -84,7 +84,7 @@ export const menus: MenuNode[] = [
     title: '园区考核',
     icon: AuditOutlined,
     path: '/assessment',
-    hint: '园区运行、招商与安全等考核指标的归集入口。评分结果尚未接入。',
+    hint: '园区运行、招商、安全与服务考核指标。本地样例可查、可改。',
     slots: ['指标目录', '评分进度', '结果归档'],
   },
   {
@@ -92,7 +92,7 @@ export const menus: MenuNode[] = [
     title: '政策管理',
     icon: FileProtectOutlined,
     path: '/policy',
-    hint: '适用园区的扶持、监管类政策条文与发布状态。政策库尚未接入。',
+    hint: '扶持、监管、安全与人才条文，以及适用对象和发布状态。本地样例可查、可改。',
     slots: ['政策库', '适用对象', '发布状态'],
   },
   {
@@ -100,7 +100,7 @@ export const menus: MenuNode[] = [
     title: '投诉举报',
     icon: AlertOutlined,
     path: '/complaint',
-    hint: '企业与公众投诉举报的受理、分派与办结。受理队列尚未接入。',
+    hint: '投诉举报的受理、分派与办结。本地样例可查、可改。',
     slots: ['受理队列', '分派去向', '办结时效'],
   },
   {
@@ -108,7 +108,7 @@ export const menus: MenuNode[] = [
     title: '数据报送',
     icon: CloudUploadOutlined,
     path: '/submission',
-    hint: '面向主管部门的定期数据报送任务与回执。任务列表尚未接入。',
+    hint: '面向主管部门的定期报送任务与回执。本地样例可查、可改。',
     slots: ['报送任务', '填报进度', '回执存档'],
   },
   {
@@ -116,7 +116,7 @@ export const menus: MenuNode[] = [
     title: '统计分析',
     icon: BarChartOutlined,
     path: '/analytics',
-    hint: '监管主题的汇总统计入口。图表与报表将于后续接入。',
+    hint: '报表条目和文字摘要可维护。图形与地图留到态势大屏第四日。',
     slots: ['主题报表', '周期对比', '导出占位'],
   },
   {
@@ -124,7 +124,7 @@ export const menus: MenuNode[] = [
     title: '系统设置',
     icon: SettingOutlined,
     path: '/settings',
-    hint: '组织、角色与字典等平台参数仍是占位。登录已在入口用本地会话接入。',
+    hint: '组织、角色与字典参数。本地样例可查、可改。登录会话仍在入口单独保存。',
     slots: ['组织架构', '角色权限', '字典参数'],
   },
 ]

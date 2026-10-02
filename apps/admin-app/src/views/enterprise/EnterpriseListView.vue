@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import EmptyState from '../../components/EmptyState.vue'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
@@ -55,6 +56,12 @@ function openEdit(id: string) {
   void router.push({ name: 'enterprise-directory-edit', params: { id } })
 }
 
+function clearFilters() {
+  keyword.value = ''
+  parkId.value = undefined
+  status.value = undefined
+}
+
 const pagination = {
   pageSize: 8,
   showTotal: (total: number) => `共 ${total} 条`,
@@ -92,7 +99,16 @@ const pagination = {
           :options="enterpriseStatuses.map((item) => ({ value: item, label: item }))"
         />
       </div>
+      <EmptyState
+        v-if="rows.length === 0"
+        description="没有符合条件的企业。"
+        action-label="清空筛选"
+        secondary-label="新建企业"
+        @action="clearFilters"
+        @secondary="router.push({ name: 'enterprise-directory-create' })"
+      />
       <a-table
+        v-else
         :columns="columns"
         :data-source="rows"
         :pagination="pagination"

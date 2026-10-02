@@ -5,6 +5,7 @@ import { message } from 'ant-design-vue'
 import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { findNode, menus, type MenuNode } from '../config/menus'
+import { useAffairsStore } from '../stores/affairs'
 import { useAppStore } from '../stores/app'
 import { useAuthStore } from '../stores/auth'
 import { useRegistryStore } from '../stores/registry'
@@ -14,6 +15,7 @@ const router = useRouter()
 const app = useAppStore()
 const auth = useAuthStore()
 const registry = useRegistryStore()
+const affairs = useAffairsStore()
 
 function toItems(nodes: MenuNode[]): ItemType[] {
   return nodes.map((node) => {
@@ -93,6 +95,7 @@ function onUserMenu(info: { key: string | number }) {
   }
   if (info.key === 'reset') {
     registry.reset()
+    affairs.reset()
     message.success('已恢复初始样例数据')
   }
 }
@@ -177,7 +180,13 @@ function onUserMenu(info: { key: string | number }) {
         </div>
       </a-layout-header>
       <a-layout-content class="admin-content">
-        <router-view />
+        <router-view v-slot="{ Component, route: childRoute }">
+          <transition name="route-fade" mode="out-in">
+            <div :key="childRoute.path" class="route-stage">
+              <component :is="Component" />
+            </div>
+          </transition>
+        </router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -261,8 +270,38 @@ function onUserMenu(info: { key: string | number }) {
   background: transparent;
 }
 
+.menu-scroll :deep(.ant-menu-item),
+.menu-scroll :deep(.ant-menu-submenu-title) {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
 .menu-scroll :deep(.ant-menu-item-selected) {
   box-shadow: inset 3px 0 0 #e2b657;
+  transform: translateX(2px);
+}
+
+.route-stage {
+  min-height: 240px;
+}
+
+.route-fade-enter-active,
+.route-fade-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.route-fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.route-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 
 .sider-foot {

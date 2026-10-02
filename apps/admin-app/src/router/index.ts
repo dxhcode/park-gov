@@ -3,7 +3,11 @@ import { menus, type MenuNode } from '../config/menus'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import { useAuthStore } from '../stores/auth'
 import LoginView from '../views/LoginView.vue'
+import { ledgerModules } from '../ledger/modules'
 import PlaceholderView from '../views/PlaceholderView.vue'
+import LedgerDetailView from '../views/ledger/LedgerDetailView.vue'
+import LedgerFormView from '../views/ledger/LedgerFormView.vue'
+import LedgerListView from '../views/ledger/LedgerListView.vue'
 import EnterpriseDetailView from '../views/enterprise/EnterpriseDetailView.vue'
 import EnterpriseFormView from '../views/enterprise/EnterpriseFormView.vue'
 import EnterpriseListView from '../views/enterprise/EnterpriseListView.vue'
@@ -15,6 +19,7 @@ import RoomFormView from '../views/space/RoomFormView.vue'
 import RoomListView from '../views/space/RoomListView.vue'
 
 const livePaths = new Set(['/enterprise/directory', '/space/building', '/space/idle'])
+const ledgerKeys = new Set(ledgerModules.map((item) => item.key))
 
 function leafRoutes(nodes: MenuNode[], group?: string): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
@@ -23,7 +28,7 @@ function leafRoutes(nodes: MenuNode[], group?: string): RouteRecordRaw[] {
       routes.push(...leafRoutes(node.children, node.title))
       continue
     }
-    if (!node.path || livePaths.has(node.path)) continue
+    if (!node.path || livePaths.has(node.path) || ledgerKeys.has(node.key)) continue
     routes.push({
       path: node.path.replace(/^\//, ''),
       name: node.key,
@@ -115,6 +120,37 @@ const registryRoutes: RouteRecordRaw[] = [
   },
 ]
 
+const affairRoutes: RouteRecordRaw[] = ledgerModules.flatMap((mod) => {
+  const base = mod.path.replace(/^\//, '')
+  const meta = { group: mod.group, menuKey: mod.key, ledger: mod.key }
+  return [
+    {
+      path: base,
+      name: mod.key,
+      component: LedgerListView,
+      meta: { ...meta, title: mod.title },
+    },
+    {
+      path: `${base}/new`,
+      name: `${mod.key}-create`,
+      component: LedgerFormView,
+      meta: { ...meta, title: mod.createTitle },
+    },
+    {
+      path: `${base}/:id`,
+      name: `${mod.key}-detail`,
+      component: LedgerDetailView,
+      meta: { ...meta, title: mod.detailTitle },
+    },
+    {
+      path: `${base}/:id/edit`,
+      name: `${mod.key}-edit`,
+      component: LedgerFormView,
+      meta: { ...meta, title: mod.editTitle },
+    },
+  ]
+})
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -128,7 +164,7 @@ const router = createRouter({
       path: '/',
       component: AdminLayout,
       redirect: '/workbench',
-      children: [...registryRoutes, ...leafRoutes(menus), { path: ':pathMatch(.*)*', redirect: '/workbench' }],
+      children: [...registryRoutes, ...affairRoutes, ...leafRoutes(menus), { path: ':pathMatch(.*)*', redirect: '/workbench' }],
     },
   ],
 })

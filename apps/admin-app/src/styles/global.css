@@ -39,3 +39,12 @@ textarea {
   color: #fff8e8 !important;
   border-color: #f3d48a !important;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

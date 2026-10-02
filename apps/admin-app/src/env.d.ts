@@ -9,6 +9,7 @@ declare module 'vue-router' {
     hint?: string
     slots?: string[]
     menuKey?: string
+    ledger?: string
     public?: boolean
     code?: string
   }
