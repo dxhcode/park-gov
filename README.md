@@ -1,6 +1,12 @@
 # 园区政府管理平台（park-gov）
 
-Day 3 把管理端剩余菜单做成可点击的本地台账：风险画像、用地、工作台、园区考核、政策管理、投诉举报、数据报送、统计分析、系统设置。企业名录、用房、闲置仍按 Day 2 的方式保留。态势大屏只加强了玻璃空态，地图、图表和指标舱留到第四日。没有真实接口，也还没有发布 GitHub Pages。
+Day 4 把六个态势场景做成深色监管驾驶舱，并第一次把静态产物推到 `dist` 分支。管理端台账仍在浏览器本地：企业、用房、闲置用 `park-gov.registry.v1`，其余业务用 `park-gov.affairs.v1`。没有后端。
+
+上线地址（需在仓库 Settings → Pages 选择 Deploy from a branch，Branch 为 `dist`，Folder 为 `/ (root)`；脚本不能改这项设置）：
+
+- https://dxhcode.github.io/park-gov/
+- https://dxhcode.github.io/park-gov/admin/
+- https://dxhcode.github.io/park-gov/screen/
 
 ## 目录
 
@@ -82,7 +88,30 @@ Day 3 用同一套列表、详情、新建/编辑补上其余菜单，样例仍�
 | 投诉热力 | `/complaint-heat` |
 | 告警中心 | `/alerts` |
 
-完整路径例如 `/park-gov/screen/overview`。六个场景都是玻璃空态，标明第四日再接入，不包含地图、图表或指标舱。
+完整路径例如 `/park-gov/screen/overview`。六个场景都有指标条、滚动字幕和本场景的图：
+
+| 场景 | 画面 |
+| --- | --- |
+| 监管总览 | 三园底图、月度产值折线、告警流、重点企业信用代码 |
+| 空间态势 | 用地 / 用房 / 闲置斑块，入住率与未盘活面积 |
+| 企业风险 | 风险环、行业条、处置闭环、企业分数 |
+| 考核看板 | 已出分条形、四类结构和记 0 分的短板 |
+| 投诉热力 | 园区热力、类型环、超时件、办理状态 |
+| 告警中心 | 循环告警、等级环、承办人去向 |
+
+样例园区是滨江云栖、临港智造、光谷生命。电话、统一社会信用代码和金额都是虚构的，并与管理端样例对齐。点地图上的园区会换成该园摘要。底部「返回管理端」回到对应台账；若从管理端带了 `from`，则回到刚才那一页。
+
+## 管理端与大屏互跳
+
+本地开发时，5173 与 5174 会互相打开；GitHub Pages 和 `pnpm pages:preview` 走同一站点下的 `/park-gov/admin/`、`/park-gov/screen/`。
+
+| 管理端 | 大屏 |
+| --- | --- |
+| 工作台 | 监管总览、告警中心 |
+| 企业名录、风险画像 | 企业风险 |
+| 用地、用房、闲置 | 空间态势 |
+| 园区考核 | 考核看板 |
+| 投诉举报 | 投诉热力 |
 
 ## GitHub Pages
 
@@ -103,7 +132,7 @@ pnpm pages:preview
 # http://127.0.0.1:4173/park-gov/
 ```
 
-发布脚本只负责把上述产物推到 `dist` 分支，不会替你打开 Pages。Day 4 再启用：
+发布脚本把上述产物推到 `dist` 分支根目录，不会改仓库的 Pages 设置。
 
 ```bash
 PAGES_PUBLISH=1 pnpm pages:publish
@@ -116,14 +145,14 @@ PAGES_PUBLISH=1 pnpm pages:publish
 3. `git push origin dist`
 4. 仓库 Settings → Pages → Deploy from a branch → Branch 选 `dist`，Folder 选 `/ (root)`
 
-上线后的地址形态：
+本仓库上线地址：
 
-- `https://<owner>.github.io/park-gov/`
-- `https://<owner>.github.io/park-gov/admin/`
-- `https://<owner>.github.io/park-gov/screen/`
+- https://dxhcode.github.io/park-gov/
+- https://dxhcode.github.io/park-gov/admin/
+- https://dxhcode.github.io/park-gov/screen/
 
 两个应用的 Vite `base` 已经按这个项目页路径写好。应用内用 Vue Router 跳转；直接打开深层地址时，根目录 `404.html` 会带回 `?p=` ，入口脚本再还原路径。
 
 ## 技术栈
 
-Vue 3、TypeScript、Vue Router、Pinia、ant-design-vue、Vite。管理端登录和各业务台账都是浏览器本地数据。态势端仍只有场景时钟和玻璃占位。
+Vue 3、TypeScript、Vue Router、Pinia、ant-design-vue、Vite。管理端登录和各业务台账都是浏览器本地数据。态势大屏用 SVG 和样式动画画地图与图表，不请求接口。

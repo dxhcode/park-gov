@@ -15,7 +15,7 @@ function gitOut(args, cwd = root) {
 }
 
 function printHelp() {
-  console.log(`尚未发布。Day 4 再在仓库设置里打开 GitHub Pages。
+  console.log(`尚未推送。要发布请设置 PAGES_PUBLISH=1。仓库 Pages 需自行选 dist 分支根目录。
 
 构建产物：
   pnpm pages:build

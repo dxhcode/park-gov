@@ -4,6 +4,7 @@ import type { TableColumnsType } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EmptyState from '../../components/EmptyState.vue'
+import ScreenLink from '../../components/ScreenLink.vue'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
@@ -75,6 +76,7 @@ const pagination = {
     hint="在园企业主体、统一社会信用代码与入驻状态。样例可查询、查看和修改，结果只保存在本机浏览器。"
   >
     <template #extra>
+      <ScreenLink scene="/enterprise-risk" label="企业风险大屏" />
       <a-button type="primary" ghost @click="router.push({ name: 'enterprise-directory-create' })">
         <PlusOutlined />
         新建企业

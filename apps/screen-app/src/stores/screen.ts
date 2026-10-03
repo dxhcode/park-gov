@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 export const useScreenStore = defineStore('screen', () => {
   const now = ref(new Date())
   const platformName = ref('园区政府管理平台')
+  const focusParkId = ref('park-binjiang')
   let timer: number | undefined
 
   const dateText = computed(() =>
@@ -36,5 +37,9 @@ export const useScreenStore = defineStore('screen', () => {
     timer = undefined
   }
 
-  return { now, platformName, dateText, timeText, start, stop }
+  function focusPark(id: string) {
+    focusParkId.value = id
+  }
+
+  return { now, platformName, focusParkId, dateText, timeText, start, stop, focusPark }
 })

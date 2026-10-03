@@ -83,6 +83,8 @@ export const ledgerModules: LedgerModule[] = [
     searchKeys: ['title', 'owner', 'source', 'summary'],
     nameKey: 'title',
     links: [
+      { label: '监管总览大屏', to: '/overview', screen: true },
+      { label: '告警中心', to: '/alerts', screen: true },
       { label: '企业名录', to: '/enterprise/directory' },
       { label: '风险画像', to: '/enterprise/risk' },
       { label: '用地', to: '/space/land' },
@@ -129,6 +131,7 @@ export const ledgerModules: LedgerModule[] = [
     searchPlaceholder: '搜索信号、承办人或说明',
     searchKeys: ['enterpriseId', 'signal', 'owner', 'note', 'dimension'],
     nameKey: 'enterpriseId',
+    links: [{ label: '企业风险大屏', to: '/enterprise-risk', screen: true }],
     fields: [
       field({ key: 'enterpriseId', label: '企业', kind: 'enterprise', required: true, table: true, tableWidth: 200 }),
       field({ key: 'parkId', label: '园区', kind: 'park', required: true, table: true, tableWidth: 120, filter: true, filterPlaceholder: '全部园区' }),
@@ -169,6 +172,7 @@ export const ledgerModules: LedgerModule[] = [
     searchPlaceholder: '搜索地块名称、编号或使用权人',
     searchKeys: ['name', 'code', 'holder', 'note'],
     nameKey: 'name',
+    links: [{ label: '空间态势大屏', to: '/space', screen: true }],
     fields: [
       field({ key: 'name', label: '地块名称', kind: 'text', required: true, table: true, tableWidth: 200 }),
       field({ key: 'parkId', label: '园区', kind: 'park', required: true, table: true, tableWidth: 120, filter: true, filterPlaceholder: '全部园区' }),
@@ -210,6 +214,7 @@ export const ledgerModules: LedgerModule[] = [
     searchPlaceholder: '搜索指标名称、承办人或说明',
     searchKeys: ['name', 'owner', 'note', 'cycle'],
     nameKey: 'name',
+    links: [{ label: '考核看板', to: '/assessment', screen: true }],
     fields: [
       field({ key: 'name', label: '指标名称', kind: 'text', required: true, table: true, tableWidth: 200 }),
       field({ key: 'parkId', label: '园区', kind: 'park', required: true, table: true, tableWidth: 120, filter: true, filterPlaceholder: '全部园区' }),
@@ -288,6 +293,7 @@ export const ledgerModules: LedgerModule[] = [
     searchPlaceholder: '搜索标题、投诉人或承办人',
     searchKeys: ['title', 'complainant', 'assignee', 'content'],
     nameKey: 'title',
+    links: [{ label: '投诉热力', to: '/complaint-heat', screen: true }],
     fields: [
       field({ key: 'title', label: '标题', kind: 'text', required: true, table: true, tableWidth: 220 }),
       field({ key: 'parkId', label: '园区', kind: 'park', required: true, table: true, tableWidth: 120, filter: true, filterPlaceholder: '全部园区' }),
@@ -365,9 +371,9 @@ export const ledgerModules: LedgerModule[] = [
     group: '统计分析',
     eyebrow: '统计分析',
     title: '统计分析',
-    listHint: '这里只维护报表条目和文字摘要。图形、地图和指标舱留到态势大屏第四日，本页不画图表。',
+    listHint: '这里只维护报表条目和文字摘要。图形和地图在态势大屏，本页不画图表。',
     detailTitle: '报表详情',
-    detailHint: '主题、口径和文字摘要。不提供图形。',
+    detailHint: '主题、口径和文字摘要。图形在态势大屏。',
     createTitle: '新建报表',
     editTitle: '编辑报表',
     formHint,

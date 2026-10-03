@@ -6,6 +6,7 @@ import StatusTag from '../../components/StatusTag.vue'
 import { formatLedgerValue } from '../../ledger/format'
 import { ledgerByKey } from '../../ledger/modules'
 import type { LedgerField } from '../../ledger/types'
+import ScreenLink from '../../components/ScreenLink.vue'
 import { useAffairsStore } from '../../stores/affairs'
 import { useRegistryStore } from '../../stores/registry'
 
@@ -44,6 +45,16 @@ function edit() {
 function openEnterprise(id: string) {
   void router.push({ name: 'enterprise-directory-detail', params: { id } })
 }
+
+const screenJump: Record<string, { label: string; scene: string }> = {
+  workbench: { label: '监管总览大屏', scene: '/overview' },
+  'enterprise-risk': { label: '企业风险大屏', scene: '/enterprise-risk' },
+  'space-land': { label: '空间态势大屏', scene: '/space' },
+  assessment: { label: '考核看板', scene: '/assessment' },
+  complaint: { label: '投诉热力', scene: '/complaint-heat' },
+}
+
+const jump = computed(() => (mod.value ? screenJump[mod.value.key] : undefined))
 </script>
 
 <template>
@@ -51,6 +62,7 @@ function openEnterprise(id: string) {
 
   <ModuleFrame v-else :eyebrow="mod.eyebrow" :title="mod.detailTitle" :hint="mod.detailHint">
     <template v-if="record" #extra>
+      <ScreenLink v-if="jump" :scene="jump.scene" :label="jump.label" />
       <a-button @click="back">返回列表</a-button>
       <a-button type="primary" @click="edit">编辑</a-button>
     </template>

@@ -9,11 +9,12 @@ import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
 import { formatLedgerValue } from '../../ledger/format'
 import { ledgerByKey } from '../../ledger/modules'
-import type { LedgerField, LedgerRecord } from '../../ledger/types'
+import type { LedgerField, LedgerLink, LedgerRecord } from '../../ledger/types'
 import { matchesKeyword, parkLabel } from '../../mock/lookups'
 import { parks } from '../../mock/parks'
 import { useAffairsStore } from '../../stores/affairs'
 import { useRegistryStore } from '../../stores/registry'
+import { openScreen } from '../../utils/app-href'
 
 const route = useRoute()
 const router = useRouter()
@@ -95,6 +96,14 @@ function create() {
   void router.push({ name: `${mod.value.key}-create` })
 }
 
+function openLink(link: LedgerLink) {
+  if (link.screen) {
+    openScreen(link.to, route.path)
+    return
+  }
+  void router.push(link.to)
+}
+
 function openDetail(id: string) {
   if (!mod.value) return
   void router.push({ name: `${mod.value.key}-detail`, params: { id } })
@@ -129,7 +138,7 @@ const pagination = {
     <a-card v-if="mod.links?.length" class="panel shortcut-card" :bordered="false">
       <div class="shortcuts">
         <span>快捷入口</span>
-        <a-button v-for="link in mod.links" :key="link.to" @click="router.push(link.to)">{{ link.label }}</a-button>
+        <a-button v-for="link in mod.links" :key="`${link.to}-${link.label}`" @click="openLink(link)">{{ link.label }}</a-button>
       </div>
     </a-card>
 

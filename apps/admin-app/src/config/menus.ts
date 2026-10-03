@@ -116,7 +116,7 @@ export const menus: MenuNode[] = [
     title: '统计分析',
     icon: BarChartOutlined,
     path: '/analytics',
-    hint: '报表条目和文字摘要可维护。图形与地图留到态势大屏第四日。',
+    hint: '报表条目和文字摘要可维护。图形与地图在态势大屏。',
     slots: ['主题报表', '周期对比', '导出占位'],
   },
   {

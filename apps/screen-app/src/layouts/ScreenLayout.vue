@@ -1,9 +1,27 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { scenes } from '../config/scenes'
 import { useScreenStore } from '../stores/screen'
+import { appHref, isSafeAdminPath } from '../utils/app-href'
 
 const screen = useScreenStore()
+const route = useRoute()
+
+const scene = computed(() => scenes.find((item) => item.path === route.path) ?? scenes[0]!)
+
+const preservedQuery = computed(() => {
+  const from = route.query.from
+  return typeof from === 'string' && isSafeAdminPath(from) ? { from } : {}
+})
+
+const backHref = computed(() => {
+  const from = route.query.from
+  const path = typeof from === 'string' && isSafeAdminPath(from) ? from : scene.value.adminPath
+  return appHref('admin', path).toString()
+})
+
+const backLabel = computed(() => (typeof route.query.from === 'string' ? '返回刚才的台账' : '返回管理端'))
 
 onMounted(() => screen.start())
 onUnmounted(() => screen.stop())
@@ -43,15 +61,15 @@ onUnmounted(() => screen.stop())
 
       <nav class="nav" aria-label="态势场景">
         <router-link
-          v-for="scene in scenes"
-          :key="scene.key"
-          :to="scene.path"
+          v-for="item in scenes"
+          :key="item.key"
+          :to="{ path: item.path, query: preservedQuery }"
           custom
           v-slot="{ href, navigate, isExactActive }"
         >
           <a :href="href" :class="{ active: isExactActive }" @click="navigate">
-            <i>{{ scene.code }}</i>
-            {{ scene.title }}
+            <i>{{ item.code }}</i>
+            {{ item.title }}
           </a>
         </router-link>
       </nav>
@@ -65,9 +83,9 @@ onUnmounted(() => screen.stop())
       </main>
 
       <footer>
-        <span><b />链路待命</span>
-        <span>玻璃占位 · 不展示驾驶舱</span>
-        <span>地图 / 图表 / 指标舱留待第四日</span>
+        <span><b />演示数据在播</span>
+        <span>{{ scene.title }} · 虚构样例</span>
+        <a class="back" :href="backHref">{{ backLabel }}</a>
       </footer>
     </div>
   </div>
@@ -289,6 +307,7 @@ onUnmounted(() => screen.stop())
 main {
   flex: 1;
   min-height: 0;
+  overflow: auto;
 }
 
 .scene-swap-enter-active,
@@ -325,9 +344,20 @@ footer span {
 footer b {
   width: 7px;
   height: 7px;
-  background: #e2b657;
+  background: #7dffa8;
   border-radius: 50%;
-  box-shadow: 0 0 8px #e2b657;
+  box-shadow: 0 0 8px #7dffa8;
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+.back {
+  color: #f3d48a;
+  text-decoration: none;
+  letter-spacing: 0.12em;
+}
+
+.back:hover {
+  color: #fff4d2;
 }
 
 @keyframes grid-pan {
@@ -344,6 +374,10 @@ footer b {
 @keyframes scan {
   from { transform: translateY(-160px); }
   to { transform: translateY(100vh); }
+}
+
+@keyframes blink {
+  50% { opacity: 0.35; }
 }
 
 @media (max-width: 980px) {

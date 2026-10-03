@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ModuleFrame from '../../components/ModuleFrame.vue'
+import ScreenLink from '../../components/ScreenLink.vue'
 import StatusTag from '../../components/StatusTag.vue'
 import { buildingLabel, formatArea, formatRent, parkLabel } from '../../mock/lookups'
 import { useRegistryStore } from '../../stores/registry'
@@ -28,6 +29,7 @@ function edit() {
 <template>
   <ModuleFrame eyebrow="空间监管" title="用房详情" hint="载体位置、承租关系与租期。">
     <template v-if="record" #extra>
+      <ScreenLink scene="/space" label="空间态势大屏" />
       <a-button @click="back">返回用房</a-button>
       <a-button type="primary" @click="edit">编辑</a-button>
     </template>

@@ -55,6 +55,7 @@ export interface LedgerField {
 export interface LedgerLink {
   label: string
   to: string
+  screen?: boolean
 }
 
 export interface LedgerStat {

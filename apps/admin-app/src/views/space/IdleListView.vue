@@ -4,6 +4,7 @@ import type { TableColumnsType } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EmptyState from '../../components/EmptyState.vue'
+import ScreenLink from '../../components/ScreenLink.vue'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
@@ -80,6 +81,7 @@ const pagination = {
     hint="闲置用地、闲置厂房和闲置楼层的发现与盘活跟踪。超过一年且尚未盘活的条目会标出。"
   >
     <template #extra>
+      <ScreenLink scene="/space" label="空间态势大屏" />
       <a-button type="primary" ghost @click="router.push({ name: 'space-idle-create' })">
         <PlusOutlined />
         新建闲置

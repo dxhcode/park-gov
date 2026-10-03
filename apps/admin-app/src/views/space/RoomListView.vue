@@ -4,6 +4,7 @@ import type { TableColumnsType } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EmptyState from '../../components/EmptyState.vue'
+import ScreenLink from '../../components/ScreenLink.vue'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
@@ -83,6 +84,7 @@ const pagination = {
     hint="厂房、楼宇与载体的使用和承租情况。可按园区和状态筛选，新建与修改保存在本机。"
   >
     <template #extra>
+      <ScreenLink scene="/space" label="空间态势大屏" />
       <a-button type="primary" ghost @click="router.push({ name: 'space-building-create' })">
         <PlusOutlined />
         新建用房
