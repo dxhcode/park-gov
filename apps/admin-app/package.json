@@ -1,0 +1,27 @@
+{
+  "name": "admin-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "typecheck": "vue-tsc -b",
+    "preview": "vite preview --host --port 4173"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "ant-design-vue": "^4.2.6",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.8",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.7",
+    "vue-tsc": "^3.0.7"
+  }
+}
