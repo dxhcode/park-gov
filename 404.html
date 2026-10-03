@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>正在返回园区政府管理平台</title>
+    <script>
+      (function () {
+        var parts = location.pathname.split('/').filter(Boolean)
+        var mark = parts.indexOf('park-gov')
+        var prefixParts = mark >= 0 ? parts.slice(0, mark + 1) : []
+        var after = mark >= 0 ? parts.slice(mark + 1) : parts
+        var app = after[0] === 'screen' ? 'screen' : 'admin'
+        var rest = after[0] === 'admin' || after[0] === 'screen' ? after.slice(1) : after
+        var prefix = prefixParts.length ? '/' + prefixParts.join('/') : ''
+        var target = prefix + '/' + app + '/'
+        if (rest.length) {
+          target += '?p=/' + rest.map(encodeURIComponent).join('/')
+        }
+        location.replace(target + location.hash)
+      })()
+    </script>
+  </head>
+  <body>正在返回园区政府管理平台…</body>
+</html>
