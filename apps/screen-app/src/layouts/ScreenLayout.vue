@@ -10,18 +10,33 @@ const route = useRoute()
 
 const scene = computed(() => scenes.find((item) => item.path === route.path) ?? scenes[0]!)
 
-const preservedQuery = computed(() => {
-  const from = route.query.from
-  return typeof from === 'string' && isSafeAdminPath(from) ? { from } : {}
+const preservedQuery = computed(() => (fromPath.value ? { from: fromPath.value } : {}))
+
+const fromPath = computed(() => {
+  const raw = route.query.from
+  const value = Array.isArray(raw) ? raw[0] : raw
+  return typeof value === 'string' && isSafeAdminPath(value) ? value : ''
 })
 
-const backHref = computed(() => {
-  const from = route.query.from
-  const path = typeof from === 'string' && isSafeAdminPath(from) ? from : scene.value.adminPath
-  return appHref('admin', path).toString()
-})
+const backHref = computed(() => appHref('admin', fromPath.value || scene.value.adminPath).toString())
 
-const backLabel = computed(() => (typeof route.query.from === 'string' ? '返回刚才的台账' : '返回管理端'))
+const backNames: Record<string, string> = {
+  '/workbench': '返回工作台',
+  '/enterprise/directory': '返回企业名录',
+  '/enterprise/risk': '返回风险画像',
+  '/space/land': '返回用地',
+  '/space/building': '返回用房',
+  '/space/idle': '返回闲置',
+  '/assessment': '返回园区考核',
+  '/complaint': '返回投诉举报',
+}
+
+const backLabel = computed(() => backNames[fromPath.value] ?? (fromPath.value ? '返回刚才的台账' : '返回管理端'))
+
+function goAdmin(event: MouseEvent) {
+  event.preventDefault()
+  window.location.assign(backHref.value)
+}
 
 onMounted(() => screen.start())
 onUnmounted(() => screen.stop())
@@ -53,9 +68,9 @@ onUnmounted(() => screen.stop())
           <h1>园区监管态势大屏</h1>
         </div>
         <div class="clock">
+          <a class="back-btn" :href="backHref" @click="goAdmin">{{ backLabel }}</a>
           <span>{{ screen.dateText }}</span>
           <strong>{{ screen.timeText }}</strong>
-          <em>本地时间</em>
         </div>
       </header>
 
@@ -85,7 +100,7 @@ onUnmounted(() => screen.stop())
       <footer>
         <span><b />演示数据在播</span>
         <span>{{ scene.title }} · 虚构样例</span>
-        <a class="back" :href="backHref">{{ backLabel }}</a>
+        <a class="back" :href="backHref" @click="goAdmin">{{ backLabel }}</a>
       </footer>
     </div>
   </div>
@@ -94,7 +109,7 @@ onUnmounted(() => screen.stop())
 <style scoped>
 .screen {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   overflow: hidden;
   color: #e7f6ff;
   background: #040a12;
@@ -151,7 +166,8 @@ onUnmounted(() => screen.stop())
   z-index: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: calc(100vh - 28px);
+  min-height: 0;
   margin: 14px;
   padding: 16px 18px 12px;
   background: linear-gradient(180deg, rgba(8, 22, 36, 0.72), rgba(5, 12, 20, 0.78));
@@ -350,10 +366,33 @@ footer b {
   animation: blink 1.6s ease-in-out infinite;
 }
 
-.back {
-  color: #f3d48a;
+.back,
+.back-btn {
+  position: relative;
+  z-index: 2;
+  color: #062033;
   text-decoration: none;
   letter-spacing: 0.12em;
+}
+
+.back-btn {
+  margin-bottom: 4px;
+  padding: 6px 12px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #f0d48a, #8eefff);
+  box-shadow: 0 0 16px rgba(142, 239, 255, 0.35);
+}
+
+.back {
+  color: #f3d48a;
+  background: transparent;
+  box-shadow: none;
+}
+
+.back:hover,
+.back-btn:hover {
+  color: #062033;
+  filter: brightness(1.05);
 }
 
 .back:hover {

@@ -27,7 +27,7 @@ defineProps<{
   flex-direction: column;
   gap: 10px;
   height: 100%;
-  min-height: 640px;
+  min-height: 0;
 }
 
 .caption {
