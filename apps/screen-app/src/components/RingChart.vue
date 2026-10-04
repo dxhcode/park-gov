@@ -126,7 +126,7 @@ i {
 }
 
 strong {
-  color: #f3d48a;
+  color: var(--park-gold-bright, #f3d48a);
   font-variant-numeric: tabular-nums;
 }
 

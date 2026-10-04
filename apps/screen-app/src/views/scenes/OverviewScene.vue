@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import AdminJump from '../../components/AdminJump.vue'
 import BarChart from '../../components/BarChart.vue'
 import CockpitFrame from '../../components/CockpitFrame.vue'
 import GlassPanel from '../../components/GlassPanel.vue'
@@ -50,11 +51,13 @@ const enterpriseBars = parkNodes.map((item) => ({
       <GlassPanel title="在册企业" extra="按园区">
         <BarChart :items="enterpriseBars" />
       </GlassPanel>
-      <GlassPanel title="重点企业" extra="信用代码虚构">
+      <GlassPanel title="重点企业" extra="点名称进档案">
         <ul class="firms">
           <li v-for="firm in spotlight" :key="firm.creditCode">
             <div>
-              <strong>{{ firm.name }}</strong>
+              <AdminJump :path="`/enterprise/directory/${firm.enterpriseId}`">
+                <strong>{{ firm.name }}</strong>
+              </AdminJump>
               <em>{{ firm.creditCode }} · {{ firm.phone }}</em>
             </div>
             <b>{{ firm.tag }}</b>
@@ -112,6 +115,10 @@ const enterpriseBars = parkNodes.map((item) => ({
 .firms strong {
   color: #f4fbff;
   font-size: 13px;
+}
+
+.firms :deep(.admin-jump:hover strong) {
+  color: var(--park-gold-bright, #f3d48a);
 }
 
 .firms {

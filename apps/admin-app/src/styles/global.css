@@ -1,12 +1,21 @@
 :root {
   --park-color-primary: #0c4f8a;
-  --park-color-accent: #0e1320;
+  --park-color-accent: #0e1628;
   --park-color-highlight: #e2b657;
+  --park-gold: #e2b657;
+  --park-gold-bright: #f3d48a;
+  --park-cyan: #7eebff;
+  --park-rose: #ff7a90;
+  --park-mint: #7dffa8;
+  --park-violet: #b9a6ff;
   --park-color-bg: #e8eef5;
   --park-color-text: #14283f;
   --park-header-bg: #0e1628;
   --park-header-text: #f4f7ff;
   --park-sider-bg: #10243f;
+  --park-radius: 14px;
+  --park-shadow: 0 12px 28px rgba(18, 46, 82, 0.06);
+  --park-gap: 16px;
   color: var(--park-color-text);
   background: var(--park-color-bg);
   font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
@@ -38,6 +47,52 @@ textarea {
 .module-banner .ant-btn-background-ghost:hover {
   color: #fff8e8 !important;
   border-color: #f3d48a !important;
+}
+
+.admin-content .ant-card {
+  border-radius: var(--park-radius);
+  box-shadow: var(--park-shadow);
+}
+
+.admin-content .ant-card-head {
+  min-height: 48px;
+  color: var(--park-color-text);
+  font-weight: 600;
+  border-bottom-color: rgba(12, 79, 138, 0.08);
+}
+
+.admin-content .ant-table-thead > tr > th {
+  color: #17324d !important;
+  font-weight: 600;
+  background: #f3f7fb !important;
+}
+
+.admin-content .ant-descriptions-item-label {
+  width: 148px;
+  color: #3d5670;
+  background: #f4f7fb !important;
+}
+
+.admin-content a {
+  color: var(--park-color-primary);
+}
+
+.admin-content a:hover {
+  color: #a67c12;
+}
+
+.screen-jump.ant-btn {
+  color: #062033;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--park-gold-bright), var(--park-cyan));
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(12, 79, 138, 0.12);
+}
+
+.screen-jump.ant-btn:hover {
+  color: #062033 !important;
+  border-color: transparent !important;
+  filter: brightness(1.06);
 }
 
 @media (prefers-reduced-motion: reduce) {

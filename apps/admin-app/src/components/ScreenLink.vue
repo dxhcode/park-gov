@@ -18,5 +18,5 @@ function open() {
 </script>
 
 <template>
-  <a-button @click="open">{{ label }}</a-button>
+  <a-button class="screen-jump" @click="open">{{ label }}</a-button>
 </template>

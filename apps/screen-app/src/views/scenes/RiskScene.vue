@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AdminJump from '../../components/AdminJump.vue'
 import BarChart from '../../components/BarChart.vue'
 import CockpitFrame from '../../components/CockpitFrame.vue'
 import GlassPanel from '../../components/GlassPanel.vue'
@@ -22,12 +23,14 @@ const scoreBars = riskCards.map((item) => ({
       <GlassPanel title="风险等级" extra="8 条画像">
         <RingChart :items="riskRings" center="8" caption="画像" />
       </GlassPanel>
-      <GlassPanel title="重点信号" extra="按分数">
+      <GlassPanel title="重点信号" extra="点名称进档案">
         <ul>
           <li v-for="card in riskCards" :key="card.creditCode">
             <div>
-              <strong>{{ card.name }}</strong>
-              <em>{{ card.creditCode }} · {{ card.phone }} · {{ card.park }}</em>
+              <AdminJump :path="`/enterprise/directory/${card.enterpriseId}`">
+                <strong>{{ card.name }}</strong>
+              </AdminJump>
+              <em>{{ card.signal }} · {{ card.creditCode }}</em>
             </div>
             <b :class="{ hot: card.level === '高风险' }">{{ card.level }} {{ card.score }}</b>
           </li>
@@ -83,6 +86,10 @@ em {
 strong {
   color: #f4fbff;
   font-size: 13px;
+}
+
+:deep(.admin-jump:hover strong) {
+  color: var(--park-gold-bright, #f3d48a);
 }
 
 em {

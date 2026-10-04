@@ -138,7 +138,14 @@ const pagination = {
     <a-card v-if="mod.links?.length" class="panel shortcut-card" :bordered="false">
       <div class="shortcuts">
         <span>快捷入口</span>
-        <a-button v-for="link in mod.links" :key="`${link.to}-${link.label}`" @click="openLink(link)">{{ link.label }}</a-button>
+        <a-button
+          v-for="link in mod.links"
+          :key="`${link.to}-${link.label}`"
+          :class="{ 'screen-jump': link.screen }"
+          @click="openLink(link)"
+        >
+          {{ link.label }}
+        </a-button>
       </div>
     </a-card>
 

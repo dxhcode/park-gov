@@ -25,7 +25,7 @@ defineProps<{
 .cockpit {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--park-gap, 12px);
   height: 100%;
   min-height: 0;
 }

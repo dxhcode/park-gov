@@ -54,7 +54,7 @@ function text(index: number) {
 .strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--park-gap, 12px);
 }
 
 article {
@@ -73,7 +73,7 @@ article::before {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #7eebff, transparent);
+  background: linear-gradient(90deg, transparent, var(--park-cyan, #7eebff), transparent);
   animation: scanline 3.2s linear infinite;
 }
 
@@ -97,13 +97,13 @@ strong {
 }
 
 .gold strong {
-  color: #f3d48a;
-  text-shadow: 0 0 16px rgba(226, 182, 87, 0.35);
+  color: var(--park-gold-bright, #f3d48a);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--park-gold, #e2b657) 35%, transparent);
 }
 
 .rose strong {
   color: #ffb4c2;
-  text-shadow: 0 0 16px rgba(255, 122, 144, 0.4);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--park-rose, #ff7a90) 40%, transparent);
 }
 
 @keyframes scanline {

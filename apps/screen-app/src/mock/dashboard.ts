@@ -1,4 +1,5 @@
 /** 大屏样例。园区、企业和风险信号与管理端台账对齐，电话、信用代码和金额都是虚构的。 */
+import { chartColors } from '../theme'
 
 export interface ParkNode {
   id: string
@@ -68,6 +69,7 @@ export interface Parcel {
 
 export interface RiskCard {
   name: string
+  enterpriseId: string
   creditCode: string
   park: string
   phone: string
@@ -144,14 +146,15 @@ export const parkNodes: ParkNode[] = [
 export const outputLabels = ['4月', '5月', '6月', '7月', '8月', '9月']
 
 export const outputSeries: Series[] = [
-  { name: '滨江云栖', color: '#7eebff', values: [8.4, 9.1, 9.6, 10.2, 11.4, 14.1] },
-  { name: '临港智造', color: '#e2b657', values: [12.2, 13.0, 13.8, 14.6, 16.2, 21.7] },
-  { name: '光谷生命', color: '#b9a6ff', values: [4.1, 4.4, 4.8, 5.2, 6.1, 7.5] },
+  { name: '滨江云栖', color: chartColors.cyan, values: [8.4, 9.1, 9.6, 10.2, 11.4, 14.1] },
+  { name: '临港智造', color: chartColors.gold, values: [12.2, 13.0, 13.8, 14.6, 16.2, 21.7] },
+  { name: '光谷生命', color: chartColors.violet, values: [4.1, 4.4, 4.8, 5.2, 6.1, 7.5] },
 ]
 
 export const spotlight = [
   {
     name: '星澜智造科技有限公司',
+    enterpriseId: 'ent-xinglan',
     creditCode: '91330108MOCK00001X',
     park: '滨江云栖',
     phone: '0571-86001101',
@@ -160,6 +163,7 @@ export const spotlight = [
   },
   {
     name: '海弈装备股份有限公司',
+    enterpriseId: 'ent-haiyi',
     creditCode: '91310115MOCK00004X',
     park: '临港智造',
     phone: '021-58002101',
@@ -168,6 +172,7 @@ export const spotlight = [
   },
   {
     name: '远能动力科技有限公司',
+    enterpriseId: 'ent-yuanneng',
     creditCode: '91310115MOCK00005X',
     park: '临港智造',
     phone: '021-58002102',
@@ -176,6 +181,7 @@ export const spotlight = [
   },
   {
     name: '启明医疗器械有限公司',
+    enterpriseId: 'ent-qiming',
     creditCode: '91420100MOCK00007X',
     park: '光谷生命',
     phone: '027-87003101',
@@ -215,6 +221,7 @@ export const parcels: Parcel[] = [
 export const riskCards: RiskCard[] = [
   {
     name: '星澜智造科技有限公司',
+    enterpriseId: 'ent-xinglan',
     creditCode: '91330108MOCK00001X',
     park: '滨江云栖',
     phone: '0571-86001101',
@@ -224,6 +231,7 @@ export const riskCards: RiskCard[] = [
   },
   {
     name: '远能动力科技有限公司',
+    enterpriseId: 'ent-yuanneng',
     creditCode: '91310115MOCK00005X',
     park: '临港智造',
     phone: '021-58002102',
@@ -233,6 +241,7 @@ export const riskCards: RiskCard[] = [
   },
   {
     name: '海弈装备股份有限公司',
+    enterpriseId: 'ent-haiyi',
     creditCode: '91310115MOCK00004X',
     park: '临港智造',
     phone: '021-58002101',
@@ -242,6 +251,7 @@ export const riskCards: RiskCard[] = [
   },
   {
     name: '青禾生物医药有限公司',
+    enterpriseId: 'ent-qinghe',
     creditCode: '91330108MOCK00002X',
     park: '滨江云栖',
     phone: '0571-86001102',
@@ -251,6 +261,7 @@ export const riskCards: RiskCard[] = [
   },
   {
     name: '白屿合成生物有限公司',
+    enterpriseId: 'ent-baiyu',
     creditCode: '91420100MOCK00008X',
     park: '光谷生命',
     phone: '027-87003102',
@@ -260,6 +271,7 @@ export const riskCards: RiskCard[] = [
   },
   {
     name: '峦数信息技术有限公司',
+    enterpriseId: 'ent-luanshu',
     creditCode: '91330108MOCK00003X',
     park: '滨江云栖',
     phone: '0571-86001103',
@@ -280,10 +292,10 @@ export const industryBars: BarItem[] = [
 ]
 
 export const riskRings: RingItem[] = [
-  { label: '高风险', value: 2, color: '#ff7a90' },
-  { label: '中风险', value: 3, color: '#e2b657' },
-  { label: '关注', value: 1, color: '#7eebff' },
-  { label: '低风险', value: 2, color: '#7dffa8' },
+  { label: '高风险', value: 2, color: chartColors.rose },
+  { label: '中风险', value: 3, color: chartColors.gold },
+  { label: '关注', value: 1, color: chartColors.cyan },
+  { label: '低风险', value: 2, color: chartColors.mint },
 ]
 
 export const closureBars: BarItem[] = [
@@ -307,18 +319,18 @@ export const shortfalls: FeedItem[] = [
 ]
 
 export const categoryRings: RingItem[] = [
-  { label: '运行', value: 2, color: '#7eebff' },
-  { label: '招商', value: 2, color: '#e2b657' },
-  { label: '安全', value: 2, color: '#ff7a90' },
-  { label: '服务', value: 2, color: '#7dffa8' },
+  { label: '运行', value: 2, color: chartColors.cyan },
+  { label: '招商', value: 2, color: chartColors.gold },
+  { label: '安全', value: 2, color: chartColors.rose },
+  { label: '服务', value: 2, color: chartColors.mint },
 ]
 
 export const complaintTypes: RingItem[] = [
-  { label: '环境', value: 3, color: '#7dffa8' },
-  { label: '物业', value: 2, color: '#7eebff' },
-  { label: '劳务', value: 1, color: '#e2b657' },
-  { label: '安全', value: 1, color: '#ff7a90' },
-  { label: '其他', value: 1, color: '#b9a6ff' },
+  { label: '环境', value: 3, color: chartColors.mint },
+  { label: '物业', value: 2, color: chartColors.cyan },
+  { label: '劳务', value: 1, color: chartColors.gold },
+  { label: '安全', value: 1, color: chartColors.rose },
+  { label: '其他', value: 1, color: chartColors.violet },
 ]
 
 export const complaintStatus: BarItem[] = [
@@ -343,9 +355,9 @@ export const ownerBars: BarItem[] = [
 ]
 
 export const levelRings: RingItem[] = [
-  { label: '紧急', value: 3, color: '#ff7a90' },
-  { label: '关注', value: 4, color: '#e2b657' },
-  { label: '提示', value: 3, color: '#7eebff' },
+  { label: '紧急', value: 3, color: chartColors.rose },
+  { label: '关注', value: 4, color: chartColors.gold },
+  { label: '提示', value: 3, color: chartColors.cyan },
 ]
 
 export const tickers: Record<string, TickerItem[]> = {

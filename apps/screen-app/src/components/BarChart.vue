@@ -52,7 +52,7 @@ strong {
 
 strong {
   font-variant-numeric: tabular-nums;
-  color: #f3d48a;
+  color: var(--park-gold-bright, #f3d48a);
 }
 
 .rail {
@@ -66,8 +66,8 @@ strong {
   display: block;
   width: 0;
   height: 100%;
-  background: linear-gradient(90deg, rgba(63, 180, 220, 0.2), #7eebff 70%, #f3d48a);
-  box-shadow: 0 0 12px rgba(126, 235, 255, 0.65);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--park-cyan, #7eebff) 22%, transparent), var(--park-cyan, #7eebff) 70%, var(--park-gold, #e2b657));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--park-cyan, #7eebff) 65%, transparent);
   transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 

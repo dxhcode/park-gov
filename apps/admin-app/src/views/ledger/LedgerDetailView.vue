@@ -52,6 +52,7 @@ const screenJump: Record<string, { label: string; scene: string }> = {
   'space-land': { label: '空间态势大屏', scene: '/space' },
   assessment: { label: '考核看板', scene: '/assessment' },
   complaint: { label: '投诉热力', scene: '/complaint-heat' },
+  analytics: { label: '监管总览大屏', scene: '/overview' },
 }
 
 const jump = computed(() => (mod.value ? screenJump[mod.value.key] : undefined))

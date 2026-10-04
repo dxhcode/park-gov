@@ -15,6 +15,11 @@ const id = computed(() => (typeof route.params.id === 'string' ? route.params.id
 const record = computed(() => registry.idleById(id.value))
 const days = computed(() => (record.value ? idleDays(record.value.idleSince) : 0))
 const overdue = computed(() => Boolean(record.value && record.value.reviveStatus !== '已盘活' && days.value >= 365))
+const relatedRooms = computed(() =>
+  record.value?.buildingId
+    ? registry.state.rooms.filter((item) => item.buildingId === record.value?.buildingId)
+    : [],
+)
 
 function back() {
   void router.push({ name: 'space-idle' })
@@ -22,6 +27,12 @@ function back() {
 
 function edit() {
   void router.push({ name: 'space-idle-edit', params: { id: id.value } })
+}
+
+function fieldText(record: object, key: unknown) {
+  if (typeof key !== 'string') return ''
+  const value = (record as Record<string, unknown>)[key]
+  return value == null ? '' : String(value)
 }
 </script>
 
@@ -58,11 +69,39 @@ function edit() {
         <a-descriptions-item label="盘活路径" :span="2">{{ record.plan }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
+
+    <a-card v-if="record" class="panel" :bordered="false" title="同楼用房">
+      <a-empty v-if="relatedRooms.length === 0" description="这条闲置没有挂到楼宇，或该楼还没有用房。" />
+      <a-table
+        v-else
+        :data-source="relatedRooms"
+        :pagination="false"
+        row-key="id"
+        :columns="[
+          { title: '载体', dataIndex: 'name', key: 'name' },
+          { title: '楼层', dataIndex: 'floor', width: 100 },
+          { title: '状态', dataIndex: 'status', key: 'status', width: 110 },
+        ]"
+      >
+        <template #bodyCell="{ column, record: room }">
+          <template v-if="column.key === 'name'">
+            <a @click.prevent="router.push({ name: 'space-building-detail', params: { id: room.id } })">
+              {{ room.name }}
+            </a>
+          </template>
+          <template v-else-if="column.key === 'status'">
+            <StatusTag :value="room.status" />
+          </template>
+          <template v-else>{{ fieldText(room, column.dataIndex) }}</template>
+        </template>
+      </a-table>
+    </a-card>
   </ModuleFrame>
 </template>
 
 <style scoped>
 .panel {
+  margin-bottom: 16px;
   border-radius: 14px;
 }
 

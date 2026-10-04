@@ -5,16 +5,24 @@ import ModuleFrame from '../../components/ModuleFrame.vue'
 import ScreenLink from '../../components/ScreenLink.vue'
 import StatusTag from '../../components/StatusTag.vue'
 import { buildingLabel, formatArea, formatRent, parkLabel, parkOf } from '../../mock/lookups'
+import { useAffairsStore } from '../../stores/affairs'
 import { useRegistryStore } from '../../stores/registry'
 
 const route = useRoute()
 const router = useRouter()
 const registry = useRegistryStore()
+const affairs = useAffairsStore()
 
 const id = computed(() => (typeof route.params.id === 'string' ? route.params.id : ''))
 const record = computed(() => registry.enterpriseById(id.value))
 const park = computed(() => (record.value ? parkOf(record.value.parkId) : undefined))
 const leasedRooms = computed(() => registry.roomsOfEnterprise(id.value))
+const risks = computed(() => affairs.state.risks.filter((item) => item.enterpriseId === id.value))
+const relatedIdles = computed(() => {
+  const buildingIds = new Set(leasedRooms.value.map((item) => item.buildingId))
+  if (record.value?.buildingId) buildingIds.add(record.value.buildingId)
+  return registry.state.idles.filter((item) => item.buildingId && buildingIds.has(item.buildingId))
+})
 
 function back() {
   void router.push({ name: 'enterprise-directory' })
@@ -22,6 +30,12 @@ function back() {
 
 function edit() {
   void router.push({ name: 'enterprise-directory-edit', params: { id: id.value } })
+}
+
+function fieldText(record: object, key: unknown) {
+  if (typeof key !== 'string') return ''
+  const value = (record as Record<string, unknown>)[key]
+  return value == null ? '' : String(value)
 }
 </script>
 
@@ -86,6 +100,62 @@ function edit() {
               <StatusTag :value="room.status" />
             </template>
             <template v-else-if="column.key === 'rent'">{{ formatRent(room.rentYuan) }}</template>
+          </template>
+        </a-table>
+      </a-card>
+
+      <a-card class="panel" :bordered="false" title="风险画像">
+        <a-empty v-if="risks.length === 0" description="这家企业还没有风险画像。" />
+        <a-table
+          v-else
+          :data-source="risks"
+          :pagination="false"
+          row-key="id"
+          :columns="[
+            { title: '异常信号', dataIndex: 'signal', key: 'signal' },
+            { title: '等级', dataIndex: 'level', key: 'level', width: 100 },
+            { title: '风险分', dataIndex: 'score', width: 90 },
+            { title: '处置', dataIndex: 'status', key: 'status', width: 100 },
+          ]"
+        >
+          <template #bodyCell="{ column, record: risk }">
+            <template v-if="column.key === 'signal'">
+              <a @click.prevent="router.push({ name: 'enterprise-risk-detail', params: { id: risk.id } })">
+                {{ risk.signal }}
+              </a>
+            </template>
+            <template v-else-if="column.key === 'level' || column.key === 'status'">
+              <StatusTag :value="fieldText(risk, column.key)" />
+            </template>
+            <template v-else>{{ fieldText(risk, column.dataIndex) }}</template>
+          </template>
+        </a-table>
+      </a-card>
+
+      <a-card class="panel" :bordered="false" title="同楼闲置">
+        <a-empty v-if="relatedIdles.length === 0" description="当前楼宇没有挂接的闲置记录。" />
+        <a-table
+          v-else
+          :data-source="relatedIdles"
+          :pagination="false"
+          row-key="id"
+          :columns="[
+            { title: '名称', dataIndex: 'name', key: 'name' },
+            { title: '类型', dataIndex: 'kind', width: 110 },
+            { title: '面积', dataIndex: 'areaNote', width: 140 },
+            { title: '盘活', dataIndex: 'reviveStatus', key: 'reviveStatus', width: 100 },
+          ]"
+        >
+          <template #bodyCell="{ column, record: idle }">
+            <template v-if="column.key === 'name'">
+              <a @click.prevent="router.push({ name: 'space-idle-detail', params: { id: idle.id } })">
+                {{ idle.name }}
+              </a>
+            </template>
+            <template v-else-if="column.key === 'reviveStatus'">
+              <StatusTag :value="idle.reviveStatus" />
+            </template>
+            <template v-else>{{ fieldText(idle, column.dataIndex) }}</template>
           </template>
         </a-table>
       </a-card>

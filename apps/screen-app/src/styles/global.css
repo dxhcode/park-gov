@@ -1,6 +1,14 @@
 :root {
+  --park-cyan: #7eebff;
+  --park-gold: #e2b657;
+  --park-gold-bright: #f3d48a;
+  --park-rose: #ff7a90;
+  --park-mint: #7dffa8;
+  --park-violet: #b9a6ff;
+  --park-ink: #040a12;
+  --park-gap: 12px;
   color: #e7f6ff;
-  background: #040a12;
+  background: var(--park-ink);
   font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", sans-serif;
   font-synthesis: none;

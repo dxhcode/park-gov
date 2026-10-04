@@ -16,6 +16,11 @@ const record = computed(() => registry.roomById(id.value))
 const tenant = computed(() =>
   record.value?.enterpriseId ? registry.enterpriseById(record.value.enterpriseId) : undefined,
 )
+const relatedIdles = computed(() =>
+  record.value?.buildingId
+    ? registry.state.idles.filter((item) => item.buildingId === record.value?.buildingId)
+    : [],
+)
 
 function back() {
   void router.push({ name: 'space-building' })
@@ -23,6 +28,12 @@ function back() {
 
 function edit() {
   void router.push({ name: 'space-building-edit', params: { id: id.value } })
+}
+
+function fieldText(record: object, key: unknown) {
+  if (typeof key !== 'string') return ''
+  const value = (record as Record<string, unknown>)[key]
+  return value == null ? '' : String(value)
 }
 </script>
 
@@ -66,11 +77,40 @@ function edit() {
         <a-descriptions-item label="备注" :span="2">{{ record.note || '—' }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
+
+    <a-card v-if="record" class="panel" :bordered="false" title="同楼闲置">
+      <a-empty v-if="relatedIdles.length === 0" description="这座楼还没有闲置记录。" />
+      <a-table
+        v-else
+        :data-source="relatedIdles"
+        :pagination="false"
+        row-key="id"
+        :columns="[
+          { title: '名称', dataIndex: 'name', key: 'name' },
+          { title: '类型', dataIndex: 'kind', width: 110 },
+          { title: '面积', dataIndex: 'areaNote', width: 140 },
+          { title: '盘活', dataIndex: 'reviveStatus', key: 'reviveStatus', width: 100 },
+        ]"
+      >
+        <template #bodyCell="{ column, record: idle }">
+          <template v-if="column.key === 'name'">
+            <a @click.prevent="router.push({ name: 'space-idle-detail', params: { id: idle.id } })">
+              {{ idle.name }}
+            </a>
+          </template>
+          <template v-else-if="column.key === 'reviveStatus'">
+            <StatusTag :value="idle.reviveStatus" />
+          </template>
+          <template v-else>{{ fieldText(idle, column.dataIndex) }}</template>
+        </template>
+      </a-table>
+    </a-card>
   </ModuleFrame>
 </template>
 
 <style scoped>
 .panel {
+  margin-bottom: 16px;
   border-radius: 14px;
 }
 

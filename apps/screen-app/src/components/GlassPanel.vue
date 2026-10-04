@@ -29,7 +29,7 @@ defineProps<{
   padding: 12px 14px 14px;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(186, 236, 255, 0.14), rgba(6, 18, 32, 0.62));
-  border: 1px solid rgba(126, 235, 255, 0.32);
+  border: 1px solid color-mix(in srgb, var(--park-cyan, #7eebff) 32%, transparent);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 0 28px rgba(63, 212, 255, 0.08);
@@ -58,8 +58,8 @@ header {
 header i {
   width: 8px;
   height: 8px;
-  background: #e2b657;
-  box-shadow: 0 0 10px #e2b657;
+  background: var(--park-gold, #e2b657);
+  box-shadow: 0 0 10px var(--park-gold, #e2b657);
   transform: rotate(45deg);
 }
 
