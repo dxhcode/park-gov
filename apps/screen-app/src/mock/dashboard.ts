@@ -1,5 +1,20 @@
-/** 大屏样例。园区、企业和风险信号与管理端台账对齐，电话、信用代码和金额都是虚构的。 */
-import { chartColors } from '../theme'
+/** 大屏样例。园区名称和电话取自 @park/mock，风险与产值仍是政府端快照。电话、信用代码和金额都是虚构的。 */
+import { parks as masterParks } from '@park/mock'
+import { screenChartPalette } from '@park/theme'
+
+const chartColors = {
+  cyan: screenChartPalette[0],
+  gold: screenChartPalette[4],
+  violet: screenChartPalette[2],
+  rose: screenChartPalette[5],
+  mint: screenChartPalette[3],
+} as const
+
+function masterPark(id: string) {
+  const park = masterParks.find((item) => item.id === id)
+  if (!park) throw new Error(`@park/mock 缺少园区 ${id}`)
+  return park
+}
 
 export interface ParkNode {
   id: string
@@ -89,10 +104,10 @@ export interface ScoreRow {
 export const parkNodes: ParkNode[] = [
   {
     id: 'park-binjiang',
-    name: '滨江云栖科创园',
+    name: masterPark('park-binjiang').name,
     shortName: '滨江云栖',
     city: '杭州 · 滨江',
-    phone: '0571-86001001',
+    phone: masterPark('park-binjiang').phone,
     x: 478,
     y: 312,
     outputYi: 62.8,
@@ -107,10 +122,10 @@ export const parkNodes: ParkNode[] = [
   },
   {
     id: 'park-lingang',
-    name: '临港智造产业园',
+    name: masterPark('park-lingang').name,
     shortName: '临港智造',
     city: '上海 · 浦东',
-    phone: '021-58002002',
+    phone: masterPark('park-lingang').phone,
     x: 548,
     y: 188,
     outputYi: 91.5,
@@ -125,10 +140,10 @@ export const parkNodes: ParkNode[] = [
   },
   {
     id: 'park-guanggu',
-    name: '光谷生命科学园',
+    name: masterPark('park-guanggu').name,
     shortName: '光谷生命',
     city: '武汉 · 东湖',
-    phone: '027-87003003',
+    phone: masterPark('park-guanggu').phone,
     x: 286,
     y: 246,
     outputYi: 32.1,

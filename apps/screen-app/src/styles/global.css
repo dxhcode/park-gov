@@ -1,16 +1,11 @@
 :root {
-  --park-cyan: #7eebff;
   --park-gold: #e2b657;
   --park-gold-bright: #f3d48a;
+  --park-cyan: var(--park-color-highlight, #67e8f9);
   --park-rose: #ff7a90;
   --park-mint: #7dffa8;
   --park-violet: #b9a6ff;
-  --park-ink: #040a12;
   --park-gap: 12px;
-  color: #e7f6ff;
-  background: var(--park-ink);
-  font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -29,11 +24,22 @@ textarea {
   font-family: inherit;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-  }
+.screen-panel.park-glass {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.screen-panel.park-glass > .park-glass__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+
+.screen-panel .park-screen-chart {
+  flex: 1;
+  min-height: 140px;
 }

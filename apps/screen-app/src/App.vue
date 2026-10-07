@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
-import { screenTheme } from './theme'
+import { screenAntdTheme } from '@park/theme'
 </script>
 
 <template>
-  <a-config-provider :locale="zhCN" :theme="screenTheme">
+  <a-config-provider :locale="zhCN" :theme="screenAntdTheme">
     <router-view />
   </a-config-provider>
 </template>

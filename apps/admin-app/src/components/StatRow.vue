@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { KpiStat } from '@park/components'
+
 defineProps<{
   items: { label: string; value: string | number; hint?: string }[]
 }>()
@@ -7,9 +9,7 @@ defineProps<{
 <template>
   <div class="stat-row">
     <article v-for="item in items" :key="item.label" class="stat">
-      <span>{{ item.label }}</span>
-      <strong>{{ item.value }}</strong>
-      <em v-if="item.hint">{{ item.hint }}</em>
+      <KpiStat :label="item.label" :value="item.value" :hint="item.hint" />
     </article>
   </div>
 </template>
@@ -26,10 +26,10 @@ defineProps<{
   position: relative;
   overflow: hidden;
   padding: 16px 16px 14px;
-  background: linear-gradient(180deg, #ffffff, #f7fafc);
-  border: 1px solid rgba(16, 52, 92, 0.06);
-  border-radius: var(--park-radius, 14px);
-  box-shadow: var(--park-shadow, 0 12px 28px rgba(18, 46, 82, 0.06));
+  background: linear-gradient(180deg, var(--park-color-surface, #fff), color-mix(in srgb, var(--park-color-bg) 65%, white));
+  border: 1px solid var(--park-color-border);
+  border-radius: var(--park-radius, 10px);
+  box-shadow: var(--park-shadow);
 }
 
 .stat::before {
@@ -39,24 +39,7 @@ defineProps<{
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--park-color-primary, #0c4f8a), var(--park-gold, #e2b657));
-}
-
-.stat span,
-.stat em {
-  display: block;
-  color: #6d8298;
-  font-style: normal;
-  font-size: 12px;
-}
-
-.stat strong {
-  display: block;
-  margin: 6px 0 4px;
-  color: #10243f;
-  font-size: 26px;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, var(--park-color-primary), var(--park-color-highlight));
 }
 
 @media (max-width: 900px) {

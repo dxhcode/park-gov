@@ -1,25 +1,11 @@
 :root {
-  --park-color-primary: #0c4f8a;
-  --park-color-accent: #0e1628;
-  --park-color-highlight: #e2b657;
-  --park-gold: #e2b657;
+  --park-gold: var(--park-color-highlight, #c6a15b);
   --park-gold-bright: #f3d48a;
   --park-cyan: #7eebff;
   --park-rose: #ff7a90;
   --park-mint: #7dffa8;
   --park-violet: #b9a6ff;
-  --park-color-bg: #e8eef5;
-  --park-color-text: #14283f;
-  --park-header-bg: #0e1628;
-  --park-header-text: #f4f7ff;
-  --park-sider-bg: #10243f;
-  --park-radius: 14px;
-  --park-shadow: 0 12px 28px rgba(18, 46, 82, 0.06);
   --park-gap: 16px;
-  color: var(--park-color-text);
-  background: var(--park-color-bg);
-  font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -39,14 +25,14 @@ textarea {
 }
 
 .module-banner .ant-btn-background-ghost {
-  color: #f3d48a;
+  color: var(--park-gold-bright);
   background: transparent;
-  border-color: rgba(243, 212, 138, 0.75);
+  border-color: color-mix(in srgb, var(--park-gold-bright) 75%, transparent);
 }
 
 .module-banner .ant-btn-background-ghost:hover {
   color: #fff8e8 !important;
-  border-color: #f3d48a !important;
+  border-color: var(--park-gold-bright) !important;
 }
 
 .admin-content .ant-card {
@@ -58,19 +44,19 @@ textarea {
   min-height: 48px;
   color: var(--park-color-text);
   font-weight: 600;
-  border-bottom-color: rgba(12, 79, 138, 0.08);
+  border-bottom-color: color-mix(in srgb, var(--park-color-primary) 16%, transparent);
 }
 
 .admin-content .ant-table-thead > tr > th {
-  color: #17324d !important;
+  color: var(--park-color-text) !important;
   font-weight: 600;
-  background: #f3f7fb !important;
+  background: color-mix(in srgb, var(--park-color-primary) 6%, white) !important;
 }
 
 .admin-content .ant-descriptions-item-label {
   width: 148px;
-  color: #3d5670;
-  background: #f4f7fb !important;
+  color: var(--park-color-text-secondary);
+  background: color-mix(in srgb, var(--park-color-primary) 5%, white) !important;
 }
 
 .admin-content a {
@@ -78,7 +64,7 @@ textarea {
 }
 
 .admin-content a:hover {
-  color: #a67c12;
+  color: var(--park-color-highlight);
 }
 
 .screen-jump.ant-btn {
@@ -86,20 +72,11 @@ textarea {
   font-weight: 600;
   background: linear-gradient(90deg, var(--park-gold-bright), var(--park-cyan));
   border-color: transparent;
-  box-shadow: 0 8px 18px rgba(12, 79, 138, 0.12);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--park-color-primary) 18%, transparent);
 }
 
 .screen-jump.ant-btn:hover {
   color: #062033 !important;
   border-color: transparent !important;
   filter: brightness(1.06);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-  }
 }

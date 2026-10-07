@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { AppLogo, RouteMotion } from '@park/components'
+import { parkMotion } from '@park/theme'
 import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { scenes } from '../config/scenes'
@@ -57,11 +59,11 @@ onUnmounted(() => screen.stop())
 
       <header class="top">
         <div class="brand">
-          <div class="seal" aria-hidden="true">园</div>
-          <div>
-            <strong>{{ screen.platformName }}</strong>
-            <em>PARK GOVERNANCE</em>
-          </div>
+          <AppLogo :title="screen.platformName" subtitle="PARK GOVERNANCE">
+            <template #mark>
+              <div class="seal" aria-hidden="true">园</div>
+            </template>
+          </AppLogo>
         </div>
         <div class="plate">
           <span>数字监管</span>
@@ -91,9 +93,9 @@ onUnmounted(() => screen.stop())
 
       <main>
         <router-view v-slot="{ Component, route: childRoute }">
-          <transition name="scene-swap" mode="out-in">
+          <RouteMotion :name="parkMotion.routeFade">
             <component :is="Component" :key="childRoute.path" />
-          </transition>
+          </RouteMotion>
         </router-view>
       </main>
 
@@ -111,8 +113,8 @@ onUnmounted(() => screen.stop())
   position: relative;
   height: 100vh;
   overflow: hidden;
-  color: #e7f6ff;
-  background: #040a12;
+  color: var(--park-color-text, #e7f6ff);
+  background: transparent;
 }
 
 .bg-grid,
@@ -202,6 +204,15 @@ onUnmounted(() => screen.stop())
   display: flex;
   gap: 12px;
   align-items: center;
+}
+
+.brand :deep(.park-logo) {
+  color: #f7fbff;
+}
+
+.brand :deep(.park-logo__mark) {
+  width: 46px;
+  height: 46px;
 }
 
 .clock {
@@ -326,17 +337,9 @@ main {
   overflow: auto;
 }
 
-.scene-swap-enter-active,
-.scene-swap-leave-active {
-  transition:
-    opacity 0.22s ease,
-    transform 0.22s ease;
-}
-
-.scene-swap-enter-from,
-.scene-swap-leave-to {
-  opacity: 0;
-  transform: translateY(8px);
+main :deep(.park-route-motion),
+main :deep(.park-route-motion > *) {
+  height: 100%;
 }
 
 footer {

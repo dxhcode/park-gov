@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
+import { AdminLayout as ParkAdminLayout, AppLogo, RouteMotion } from '@park/components'
+import { parkMotion } from '@park/theme'
 import type { ItemType } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -22,6 +24,7 @@ function toItems(nodes: MenuNode[]): ItemType[] {
     const children = node.children?.length ? toItems(node.children) : undefined
     return {
       key: node.key,
+      class: parkMotion.menuPulse,
       icon: node.icon ? () => h(node.icon!) : undefined,
       label: node.title,
       ...(children ? { children } : {}),
@@ -59,6 +62,7 @@ const today = new Intl.DateTimeFormat('zh-CN', {
 }).format(new Date())
 
 const isNarrow = ref(false)
+const collapsedWidth = computed(() => (isNarrow.value ? 0 : 80))
 let viewportQuery: MediaQueryList | undefined
 
 function onViewportChange(event?: MediaQueryListEvent) {
@@ -102,35 +106,81 @@ function onUserMenu(info: { key: string | number }) {
 </script>
 
 <template>
-  <a-layout class="admin-shell">
-    <a-layout-sider
+  <div class="gov-admin">
+    <ParkAdminLayout
       v-model:collapsed="app.collapsed"
-      class="admin-sider"
-      :width="248"
-      :collapsed-width="isNarrow ? 0 : 80"
-      collapsible
-      :trigger="null"
-      theme="dark"
+      :title="app.platformName"
+      subtitle="GOV"
+      :sider-width="248"
+      :collapsed-width="collapsedWidth"
     >
-      <div class="brand">
-        <div class="seal" aria-hidden="true">园</div>
-        <div v-show="!app.collapsed" class="brand-text">
-          <strong>{{ app.platformName }}</strong>
-          <span>PARK GOVERNANCE</span>
+      <template #logo>
+        <AppLogo v-show="!app.collapsed" :title="app.platformName" subtitle="PARK GOVERNANCE">
+          <template #mark>
+            <div class="seal" aria-hidden="true">园</div>
+          </template>
+        </AppLogo>
+        <div v-show="app.collapsed" class="seal" aria-hidden="true">园</div>
+      </template>
+      <template #sider>
+        <div class="menu-scroll">
+          <a-menu
+            v-model:open-keys="openKeys"
+            :selected-keys="selectedKeys"
+            mode="inline"
+            theme="dark"
+            :items="menuItems"
+            @click="onMenuClick"
+          />
         </div>
-      </div>
-      <div class="menu-scroll">
-        <a-menu
-          v-model:open-keys="openKeys"
-          :selected-keys="selectedKeys"
-          mode="inline"
-          theme="dark"
-          :items="menuItems"
-          @click="onMenuClick"
-        />
-      </div>
-      <p v-show="!app.collapsed" class="sider-foot">本地演示 · 数据不落库</p>
-    </a-layout-sider>
+        <p v-show="!app.collapsed" class="sider-foot">本地演示 · 数据不落库</p>
+      </template>
+      <template #header>
+        <a-button
+          type="text"
+          class="fold"
+          :aria-label="app.collapsed ? '展开菜单' : '折叠菜单'"
+          @click="app.toggleCollapsed()"
+        >
+          <MenuUnfoldOutlined v-if="app.collapsed" />
+          <MenuFoldOutlined v-else />
+        </a-button>
+        <div class="crumb-wrap">
+          <a-breadcrumb>
+            <a-breadcrumb-item>园区政府管理平台</a-breadcrumb-item>
+            <a-breadcrumb-item v-if="showGroup">{{ group }}</a-breadcrumb-item>
+            <a-breadcrumb-item>{{ title }}</a-breadcrumb-item>
+          </a-breadcrumb>
+          <p class="today">{{ today }}</p>
+        </div>
+      </template>
+      <template #extra>
+        <a-tag class="demo-tag">本地演示</a-tag>
+        <a-dropdown v-if="user" placement="bottomRight">
+          <button class="user-chip" type="button">
+            <span class="avatar">{{ surname }}</span>
+            <span class="user-meta">
+              <strong>{{ user.displayName }}</strong>
+              <em>{{ user.orgName }} · {{ user.dutyLabel }}</em>
+            </span>
+          </button>
+          <template #overlay>
+            <a-menu @click="onUserMenu">
+              <a-menu-item key="reset">恢复样例数据</a-menu-item>
+              <a-menu-item key="logout">退出登录</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </template>
+
+      <router-view v-slot="{ Component, route: childRoute }">
+        <RouteMotion :name="parkMotion.routeFade">
+          <div :key="childRoute.path" class="route-stage admin-content">
+            <component :is="Component" />
+          </div>
+        </RouteMotion>
+      </router-view>
+    </ParkAdminLayout>
     <button
       v-if="isNarrow && !app.collapsed"
       class="sider-mask"
@@ -138,87 +188,45 @@ function onUserMenu(info: { key: string | number }) {
       aria-label="关闭菜单"
       @click="app.collapsed = true"
     />
-
-    <a-layout class="admin-body">
-      <a-layout-header class="admin-header">
-        <div class="header-left">
-          <a-button
-            type="text"
-            class="fold"
-            :aria-label="app.collapsed ? '展开菜单' : '折叠菜单'"
-            @click="app.toggleCollapsed()"
-          >
-            <MenuUnfoldOutlined v-if="app.collapsed" />
-            <MenuFoldOutlined v-else />
-          </a-button>
-          <div class="crumb-wrap">
-            <a-breadcrumb>
-              <a-breadcrumb-item>园区政府管理平台</a-breadcrumb-item>
-              <a-breadcrumb-item v-if="showGroup">{{ group }}</a-breadcrumb-item>
-              <a-breadcrumb-item>{{ title }}</a-breadcrumb-item>
-            </a-breadcrumb>
-            <p class="today">{{ today }}</p>
-          </div>
-        </div>
-        <div class="header-right">
-          <a-tag class="demo-tag">本地演示</a-tag>
-          <a-dropdown v-if="user" placement="bottomRight">
-            <button class="user-chip" type="button">
-              <span class="avatar">{{ surname }}</span>
-              <span class="user-meta">
-                <strong>{{ user.displayName }}</strong>
-                <em>{{ user.orgName }} · {{ user.dutyLabel }}</em>
-              </span>
-            </button>
-            <template #overlay>
-              <a-menu @click="onUserMenu">
-                <a-menu-item key="reset">恢复样例数据</a-menu-item>
-                <a-menu-item key="logout">退出登录</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </div>
-      </a-layout-header>
-      <a-layout-content class="admin-content">
-        <router-view v-slot="{ Component, route: childRoute }">
-          <transition name="route-fade" mode="out-in">
-            <div :key="childRoute.path" class="route-stage">
-              <component :is="Component" />
-            </div>
-          </transition>
-        </router-view>
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+  </div>
 </template>
 
 <style scoped>
-.admin-shell {
+.gov-admin {
+  position: relative;
   height: 100%;
-  background: var(--park-color-bg, #e8eef5);
 }
 
-.admin-sider {
-  background:
-    radial-gradient(circle at 18% 0%, rgba(64, 148, 214, 0.32), transparent 42%),
-    linear-gradient(180deg, #152847 0%, #0e1b30 46%, #0a1424 100%) !important;
-  border-right: 1px solid rgba(226, 182, 87, 0.32);
-  box-shadow: 8px 0 32px rgba(8, 20, 36, 0.22);
+.gov-admin :deep(.park-admin) {
+  height: 100%;
+  min-height: 0;
 }
 
-.admin-sider :deep(.ant-layout-sider-children) {
+.gov-admin :deep(.park-admin__collapse) {
+  display: none;
+}
+
+.gov-admin :deep(.park-admin__nav) {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 0;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 84px;
-  padding: 0 16px;
-  border-bottom: 1px solid rgba(226, 182, 87, 0.28);
+.gov-admin :deep(.park-admin__header) {
+  height: 72px;
+  padding-inline: 12px 20px;
+  border-bottom: 1px solid color-mix(in srgb, var(--park-color-highlight) 45%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--park-color-highlight) 28%, transparent), transparent 32%),
+    var(--park-header-bg);
+}
+
+.gov-admin :deep(.park-admin__content) {
+  overflow: auto;
+  padding: 22px 24px 32px;
+  background-color: var(--park-color-bg);
+  background-image: radial-gradient(color-mix(in srgb, var(--park-color-primary) 14%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
 .seal {
@@ -227,36 +235,14 @@ function onUserMenu(info: { key: string | number }) {
   place-items: center;
   width: 44px;
   height: 44px;
-  color: #f3d48a;
+  color: var(--park-gold-bright, #f3d48a);
   font-weight: 700;
   font-size: 20px;
-  background: radial-gradient(circle at 30% 30%, #1d4d7a, #0b1c33 70%);
+  background: radial-gradient(circle at 30% 30%, #243044, var(--park-ink, #0e1320) 70%);
   box-shadow:
-    inset 0 0 0 1px rgba(243, 212, 138, 0.95),
+    inset 0 0 0 1px color-mix(in srgb, var(--park-color-highlight) 95%, transparent),
     inset 0 0 0 4px rgba(8, 20, 36, 0.85),
-    inset 0 0 0 5px rgba(243, 212, 138, 0.7);
-}
-
-.brand-text {
-  min-width: 0;
-  color: #f7fbff;
-}
-
-.brand-text strong {
-  display: block;
-  overflow: hidden;
-  font-size: 15px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.brand-text span {
-  display: block;
-  margin-top: 3px;
-  color: rgba(226, 182, 87, 0.82);
-  font-size: 10px;
-  letter-spacing: 0.16em;
+    inset 0 0 0 5px color-mix(in srgb, var(--park-color-highlight) 70%, transparent);
 }
 
 .menu-scroll {
@@ -270,90 +256,33 @@ function onUserMenu(info: { key: string | number }) {
   background: transparent;
 }
 
-.menu-scroll :deep(.ant-menu-item),
-.menu-scroll :deep(.ant-menu-submenu-title) {
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.menu-scroll :deep(.ant-menu-item-selected) {
-  box-shadow: inset 3px 0 0 #e2b657;
-  transform: translateX(2px);
-}
-
 .route-stage {
   min-height: 240px;
-}
-
-.route-fade-enter-active,
-.route-fade-leave-active {
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.route-fade-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.route-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
 }
 
 .sider-foot {
   margin: 0;
   padding: 12px 16px 16px;
-  color: rgba(226, 182, 87, 0.72);
+  color: color-mix(in srgb, var(--park-color-highlight) 72%, white);
   font-size: 12px;
   letter-spacing: 0.08em;
-  border-top: 1px solid rgba(226, 182, 87, 0.18);
+  border-top: 1px solid color-mix(in srgb, var(--park-color-highlight) 28%, transparent);
 }
 
-.admin-body {
-  min-width: 0;
-  background: #e8eef5;
-}
-
-.admin-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 72px;
-  padding: 0 20px 0 8px;
-  line-height: 1.2;
-  background:
-    linear-gradient(90deg, rgba(226, 182, 87, 0.45), transparent 32%),
-    linear-gradient(180deg, #15233a 0%, #0e1628 100%);
-  border-bottom: 1px solid rgba(226, 182, 87, 0.38);
-  box-shadow: 0 12px 28px rgba(8, 16, 32, 0.16);
-}
-
-.admin-header :deep(.ant-breadcrumb),
-.admin-header :deep(.ant-breadcrumb a),
-.admin-header :deep(.ant-breadcrumb-separator) {
+.gov-admin :deep(.ant-breadcrumb),
+.gov-admin :deep(.ant-breadcrumb a),
+.gov-admin :deep(.ant-breadcrumb-separator) {
   color: rgba(244, 247, 255, 0.68);
 }
 
-.admin-header :deep(.ant-breadcrumb li:last-child) {
+.gov-admin :deep(.ant-breadcrumb li:last-child) {
   color: #f4f7ff;
-}
-
-.header-left,
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
 }
 
 .fold {
   width: 40px;
   height: 40px;
-  color: #f4d78a;
+  color: var(--park-gold-bright, #f3d48a);
   font-size: 18px;
 }
 
@@ -364,15 +293,15 @@ function onUserMenu(info: { key: string | number }) {
 
 .today {
   margin: 4px 0 0;
-  color: rgba(243, 212, 138, 0.78);
+  color: color-mix(in srgb, var(--park-gold-bright, #f3d48a) 78%, transparent);
   font-size: 12px;
 }
 
 .demo-tag {
   margin: 0;
-  color: #f3d48a;
-  background: rgba(226, 182, 87, 0.12);
-  border-color: rgba(226, 182, 87, 0.45);
+  color: var(--park-gold-bright, #f3d48a);
+  background: color-mix(in srgb, var(--park-color-highlight) 16%, transparent);
+  border-color: color-mix(in srgb, var(--park-color-highlight) 55%, transparent);
 }
 
 .user-chip {
@@ -382,7 +311,7 @@ function onUserMenu(info: { key: string | number }) {
   padding: 4px 12px 4px 4px;
   color: #f7fbff;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(226, 182, 87, 0.4);
+  border: 1px solid color-mix(in srgb, var(--park-color-highlight) 55%, transparent);
   border-radius: 999px;
   cursor: pointer;
 }
@@ -394,7 +323,7 @@ function onUserMenu(info: { key: string | number }) {
   height: 32px;
   color: #1a1408;
   font-weight: 700;
-  background: linear-gradient(160deg, #f3d48a, #c6a15b);
+  background: linear-gradient(160deg, var(--park-gold-bright, #f3d48a), var(--park-color-highlight));
   border-radius: 50%;
 }
 
@@ -416,14 +345,6 @@ function onUserMenu(info: { key: string | number }) {
   font-size: 12px;
 }
 
-.admin-content {
-  overflow: auto;
-  padding: 22px 24px 32px;
-  background-color: #e8eef5;
-  background-image: radial-gradient(rgba(20, 54, 92, 0.09) 1px, transparent 1px);
-  background-size: 22px 22px;
-}
-
 .sider-mask {
   position: absolute;
   inset: 0;
@@ -435,11 +356,7 @@ function onUserMenu(info: { key: string | number }) {
 }
 
 @media (max-width: 960px) {
-  .admin-shell {
-    position: relative;
-  }
-
-  .admin-sider {
+  .gov-admin :deep(.park-admin__sider) {
     position: absolute !important;
     z-index: 40;
     height: 100%;
@@ -451,7 +368,7 @@ function onUserMenu(info: { key: string | number }) {
     display: none;
   }
 
-  .admin-content {
+  .gov-admin :deep(.park-admin__content) {
     padding: 16px;
   }
 }

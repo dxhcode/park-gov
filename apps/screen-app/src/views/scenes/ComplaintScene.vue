@@ -18,12 +18,10 @@ const heatBars = parkNodes.map((item) => ({
   <CockpitFrame
     :metrics="metricsOf('complaint-heat')"
     :ticker="tickerOf('complaint-heat')"
-    caption="投诉热力按园区件数铺开。临港三件叠在一起，圆斑最大。电话和姓名都是虚构的。"
+    caption="投诉热力按园区件数铺开。点位说明标出件数，临港三件最多。电话和姓名都是虚构的。"
   >
     <div class="board">
-      <GlassPanel title="受理热力" extra="点园区看摘要">
-        <ParkMap mode="complaint" />
-      </GlassPanel>
+      <ParkMap mode="complaint" title="受理热力" extra="点园区看摘要" />
       <GlassPanel title="类型结构" extra="8 件">
         <RingChart :items="complaintTypes" center="8" caption="受理" />
       </GlassPanel>

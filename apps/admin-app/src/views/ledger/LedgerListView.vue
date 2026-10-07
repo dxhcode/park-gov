@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import EmptyState from '../../components/EmptyState.vue'
+import { EmptyState } from '@park/components'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
 import StatusTag from '../../components/StatusTag.vue'
@@ -164,10 +164,12 @@ const pagination = {
 
       <EmptyState
         v-if="rows.length === 0"
-        :description="filteredEmpty ? '没有符合条件的记录。' : mod.emptyTitle"
-        :action-label="filteredEmpty ? '清空筛选' : mod.createLabel"
-        :secondary-label="filteredEmpty ? mod.createLabel : undefined"
-        @action="filteredEmpty ? clearFilters() : create()"
+        :variant="filteredEmpty ? 'search' : 'empty'"
+        :title="filteredEmpty ? '没有符合条件的记录' : mod.emptyTitle"
+        :description="filteredEmpty ? '换一个条件，或清空筛选后再查。' : '可以新建一条记录。'"
+        :primary-text="filteredEmpty ? '清空筛选' : mod.createLabel"
+        :secondary-text="filteredEmpty ? mod.createLabel : ''"
+        @primary="filteredEmpty ? clearFilters() : create()"
         @secondary="create"
       />
       <a-table
