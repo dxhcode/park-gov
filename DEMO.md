@@ -17,7 +17,7 @@
 本地开发时端口不同，页面里的「大屏 / 返回管理端」会在 5173 和 5174 之间跳：
 
 ```bash
-pnpm install
+pnpm install       # 会从 park-shared 安装 @park/theme、@park/components、@park/mock
 pnpm dev:admin     # http://localhost:5173/park-gov/admin/
 pnpm dev:screen    # http://localhost:5174/park-gov/screen/
 ```
@@ -93,7 +93,7 @@ pnpm pages:preview
 从管理端进大屏时，地址会带 `from`，大屏右上角和底栏按来源返回。
 
 1. 在工作台点渐变按钮「监管总览大屏」。线上打开 https://dxhcode.github.io/park-gov/screen/overview?from=%2Fworkbench 。
-2. 观众应看到深色玻璃舱、四枚滚动数字、金色滚动字幕、三园示意图、月度产值折线、告警流。
+2. 观众应看到深色玻璃舱、四枚滚动数字、金色数字的滚动字幕、三园示意图、月度产值折线、告警流。
 3. 点地图上的滨江云栖、临港智造、光谷生命。右侧摘要换成该园的电话和产值。
 4. 点「重点企业」里的公司名，回到管理端对应档案（未登录会先经过登录页，再回到该企业）。
 5. 顶栏六个场景依次点：空间态势、企业风险、考核看板、投诉热力、告警中心。每个场景都有指标条、滚动字幕和本场景的图。

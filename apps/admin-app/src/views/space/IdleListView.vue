@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import EmptyState from '../../components/EmptyState.vue'
+import { EmptyState } from '@park/components'
 import ScreenLink from '../../components/ScreenLink.vue'
 import ModuleFrame from '../../components/ModuleFrame.vue'
 import StatRow from '../../components/StatRow.vue'
@@ -114,10 +114,12 @@ const pagination = {
       </div>
       <EmptyState
         v-if="rows.length === 0"
-        description="没有符合条件的闲置记录。"
-        action-label="清空筛选"
-        secondary-label="新建闲置"
-        @action="clearFilters"
+        variant="search"
+        title="没有符合条件的闲置记录"
+        description="换一个条件，或清空筛选后再查。"
+        primary-text="清空筛选"
+        secondary-text="新建闲置"
+        @primary="clearFilters"
         @secondary="router.push({ name: 'space-idle-create' })"
       />
       <a-table

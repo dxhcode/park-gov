@@ -41,4 +41,13 @@ defineProps<{
   flex: 1;
   min-height: 0;
 }
+
+.cockpit :deep(.park-ticker) {
+  border-color: rgba(226, 182, 87, 0.55);
+  box-shadow: inset 0 0 18px rgba(226, 182, 87, 0.08);
+}
+
+.cockpit :deep(.park-ticker__value) {
+  color: var(--park-gold-bright, #f3d48a);
+}
 </style>

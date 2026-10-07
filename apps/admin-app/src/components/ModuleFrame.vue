@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { PageHeader } from '@park/components'
+
 defineProps<{
   eyebrow: string
   title: string
@@ -8,16 +10,11 @@ defineProps<{
 
 <template>
   <section class="module-page">
-    <header class="module-banner">
-      <div>
-        <p class="eyebrow">{{ eyebrow }}</p>
-        <h1>{{ title }}</h1>
-        <p v-if="hint" class="hint">{{ hint }}</p>
-      </div>
-      <div v-if="$slots.extra" class="extra">
+    <PageHeader class="module-banner" :eyebrow="eyebrow" :title="title" :subtitle="hint">
+      <template v-if="$slots.extra" #extra>
         <slot name="extra" />
-      </div>
-    </header>
+      </template>
+    </PageHeader>
     <slot />
   </section>
 </template>
@@ -28,47 +25,39 @@ defineProps<{
 }
 
 .module-banner {
-  display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
   margin-bottom: 18px;
   padding: 22px 24px;
   background:
-    linear-gradient(120deg, rgba(12, 79, 138, 0.96), rgba(14, 22, 40, 0.94) 58%, rgba(28, 42, 58, 0.9)),
-    #0c4f8a;
-  border-radius: 16px;
+    linear-gradient(120deg, color-mix(in srgb, var(--park-ink) 88%, var(--park-color-primary)), var(--park-ink) 62%),
+    var(--park-ink);
+  border: 0;
+  border-radius: var(--park-radius-lg, 16px);
   box-shadow:
     0 16px 40px rgba(12, 40, 72, 0.16),
-    inset 0 1px 0 rgba(243, 212, 138, 0.35);
+    inset 0 1px 0 color-mix(in srgb, var(--park-gold-bright, #f3d48a) 35%, transparent);
 }
 
-.eyebrow {
-  margin: 0 0 8px;
-  color: #f0d48a;
-  font-size: 12px;
+.module-banner :deep(.park-page-header__main) {
+  border-left-color: var(--park-color-highlight);
+}
+
+.module-banner :deep(.park-page-header__eyebrow) {
+  color: var(--park-gold-bright, #f3d48a);
   letter-spacing: 0.32em;
+  text-transform: none;
 }
 
-h1 {
-  margin: 0;
+.module-banner :deep(h1) {
   color: #f8fbff;
   font-size: 32px;
   letter-spacing: 0.06em;
 }
 
-.hint {
+.module-banner :deep(.park-page-header__subtitle) {
   max-width: 720px;
-  margin: 10px 0 0;
   color: rgba(236, 244, 252, 0.82);
   line-height: 1.7;
-}
-
-.extra {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
 }
 
 @media (max-width: 760px) {
@@ -76,7 +65,7 @@ h1 {
     flex-direction: column;
   }
 
-  h1 {
+  .module-banner :deep(h1) {
     font-size: 26px;
   }
 }

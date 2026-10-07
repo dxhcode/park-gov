@@ -6,8 +6,8 @@
   "scripts": {
     "dev:admin": "pnpm --filter admin-app dev",
     "dev:screen": "pnpm --filter screen-app dev",
-    "build": "pnpm -r --if-present build",
-    "typecheck": "pnpm -r --if-present typecheck",
+    "build": "pnpm --filter admin-app --filter screen-app build",
+    "typecheck": "pnpm --filter admin-app --filter screen-app typecheck",
     "pages:build": "node scripts/pages-build.mjs",
     "pages:preview": "node scripts/pages-preview.mjs",
     "pages:publish": "node scripts/pages-publish.mjs"

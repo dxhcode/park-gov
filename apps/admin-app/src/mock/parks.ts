@@ -1,175 +1,48 @@
-import type { Building, Enterprise, Park } from './types'
+import { buildings, enterprises as sharedEnterprises, parks } from '@park/mock'
+import type { Enterprise } from './types'
+
+export { buildings, parks }
 
 /**
- * 园区、楼宇与企业样例。主体清单对齐 park-shared 的 @park/mock，
- * 并补了法定代表人与经营地址。统一社会信用代码和电话都是虚构的。
+ * 共享主数据没有法定代表人和经营地址。政府端台账补上这两项，
+ * 并保留共享清单之外的四家企业，演示走查仍能点到澄江、北麓、浦潮、东湖。
  */
-export const parks: Park[] = [
-  {
-    id: 'park-binjiang',
-    name: '滨江云栖科创园',
-    shortName: '云栖科创',
-    code: 'HZ-BJ-01',
-    city: '杭州市',
-    district: '滨江区',
-    address: '杭州市滨江区网商路 599 号',
-    areaMu: 860,
-    establishedYear: 2016,
-    type: '科技园',
-    status: '运营中',
-    description: '以数字经济、人工智能与集成电路设计为主导的都市科创园区。',
-    manager: '陈启明',
-    phone: '0571-86001001',
-  },
-  {
-    id: 'park-lingang',
-    name: '临港智造产业园',
-    shortName: '临港智造',
-    code: 'SH-LG-02',
-    city: '上海市',
-    district: '浦东新区',
-    address: '上海市浦东新区海港大道 1555 号',
-    areaMu: 1420,
-    establishedYear: 2019,
-    type: '产业园',
-    status: '运营中',
-    description: '面向高端装备、新能源与智能工厂的临港制造园区。',
-    manager: '周岚',
-    phone: '021-58002002',
-  },
-  {
-    id: 'park-guanggu',
-    name: '光谷生命科学园',
-    shortName: '光谷生命',
-    code: 'WH-GG-03',
-    city: '武汉市',
-    district: '东湖高新区',
-    address: '武汉市东湖高新区高新大道 818 号',
-    areaMu: 980,
-    establishedYear: 2018,
-    type: '综合园',
-    status: '建设中',
-    description: '生物医药、医疗器械与中试转化并重的综合性科学园区。',
-    manager: '刘澄',
-    phone: '027-87003003',
-  },
-]
-
-export const buildings: Building[] = [
-  {
-    id: 'bld-bj-a1',
-    parkId: 'park-binjiang',
-    name: 'A1 研发楼',
-    code: 'A1',
-    floors: 12,
-    areaSqm: 18600,
-    usage: '研发',
-    occupancyRate: 0.86,
-  },
-  {
-    id: 'bld-bj-b2',
-    parkId: 'park-binjiang',
-    name: 'B2 实验楼',
-    code: 'B2',
-    floors: 8,
-    areaSqm: 12400,
-    usage: '研发',
-    occupancyRate: 0.74,
-  },
-  {
-    id: 'bld-lg-m1',
-    parkId: 'park-lingang',
-    name: 'M1 智能厂房',
-    code: 'M1',
-    floors: 4,
-    areaSqm: 32000,
-    usage: '生产',
-    occupancyRate: 0.91,
-  },
-  {
-    id: 'bld-lg-m2',
-    parkId: 'park-lingang',
-    name: 'M2 动力站',
-    code: 'M2',
-    floors: 3,
-    areaSqm: 8600,
-    usage: '配套',
-    occupancyRate: 0.68,
-  },
-  {
-    id: 'bld-gg-c1',
-    parkId: 'park-guanggu',
-    name: 'C1 研发中心',
-    code: 'C1',
-    floors: 15,
-    areaSqm: 24000,
-    usage: '办公',
-    occupancyRate: 0.57,
-  },
-  {
-    id: 'bld-gg-c2',
-    parkId: 'park-guanggu',
-    name: 'C2 中试楼',
-    code: 'C2',
-    floors: 6,
-    areaSqm: 15000,
-    usage: '生产',
-    occupancyRate: 0.33,
-  },
-]
-
-export const enterprises: Enterprise[] = [
-  {
-    id: 'ent-xinglan',
-    parkId: 'park-binjiang',
-    buildingId: 'bld-bj-a1',
-    name: '星澜智造科技有限公司',
-    creditCode: '91330108MOCK00001X',
-    industry: '人工智能',
-    scale: '中型',
-    employeeCount: 186,
-    registeredCapital: '5000 万人民币',
+const profiles: Record<string, Pick<Enterprise, 'legalPerson' | 'address'>> = {
+  'ent-xinglan': {
     legalPerson: '沈予安',
-    contact: '沈予安',
-    phone: '0571-86001101',
-    settledAt: '2021-04-18',
-    status: '在园',
     address: '杭州市滨江区网商路 599 号 A1 研发楼',
   },
-  {
-    id: 'ent-qinghe',
-    parkId: 'park-binjiang',
-    buildingId: 'bld-bj-b2',
-    name: '青禾生物医药有限公司',
-    creditCode: '91330108MOCK00002X',
-    industry: '生物医药',
-    scale: '小型',
-    employeeCount: 72,
-    registeredCapital: '2000 万人民币',
+  'ent-qinghe': {
     legalPerson: '林知夏',
-    contact: '林知夏',
-    phone: '0571-86001102',
-    settledAt: '2022-09-01',
-    status: '在园',
     address: '杭州市滨江区网商路 599 号 B2 实验楼',
   },
-  {
-    id: 'ent-luanshu',
-    parkId: 'park-binjiang',
-    buildingId: 'bld-bj-a1',
-    name: '峦数信息技术有限公司',
-    creditCode: '91330108MOCK00003X',
-    industry: '软件信息',
-    scale: '小型',
-    employeeCount: 41,
-    registeredCapital: '800 万人民币',
+  'ent-luanshu': {
     legalPerson: '赵衡',
-    contact: '赵衡',
-    phone: '0571-86001103',
-    settledAt: '2026-03-12',
-    status: '待入驻',
     address: '杭州市滨江区网商路 599 号 A1 研发楼',
   },
+  'ent-haiyi': {
+    legalPerson: '马屹',
+    address: '上海市浦东新区海港大道 1555 号 M1 智能厂房',
+  },
+  'ent-yuanneng': {
+    legalPerson: '顾清和',
+    address: '上海市浦东新区海港大道 1555 号 M2 动力站',
+  },
+  'ent-jinfan': {
+    legalPerson: '吴帆',
+    address: '上海市浦东新区海港大道 1555 号（档案保留）',
+  },
+  'ent-qiming': {
+    legalPerson: '何晚宁',
+    address: '武汉市东湖高新区高新大道 818 号 C1 研发中心',
+  },
+  'ent-baiyu': {
+    legalPerson: '许屿',
+    address: '武汉市东湖高新区高新大道 818 号 C2 中试楼',
+  },
+}
+
+const govOnly: Enterprise[] = [
   {
     id: 'ent-chengjiang',
     parkId: 'park-binjiang',
@@ -205,57 +78,6 @@ export const enterprises: Enterprise[] = [
     address: '杭州市滨江区网商路 599 号 B2 实验楼',
   },
   {
-    id: 'ent-haiyi',
-    parkId: 'park-lingang',
-    buildingId: 'bld-lg-m1',
-    name: '海弈装备股份有限公司',
-    creditCode: '91310115MOCK00004X',
-    industry: '高端装备',
-    scale: '大型',
-    employeeCount: 640,
-    registeredCapital: '2 亿人民币',
-    legalPerson: '马屹',
-    contact: '马屹',
-    phone: '021-58002101',
-    settledAt: '2020-06-30',
-    status: '在园',
-    address: '上海市浦东新区海港大道 1555 号 M1 智能厂房',
-  },
-  {
-    id: 'ent-yuanneng',
-    parkId: 'park-lingang',
-    buildingId: 'bld-lg-m2',
-    name: '远能动力科技有限公司',
-    creditCode: '91310115MOCK00005X',
-    industry: '新能源',
-    scale: '中型',
-    employeeCount: 228,
-    registeredCapital: '8000 万人民币',
-    legalPerson: '顾清和',
-    contact: '顾清和',
-    phone: '021-58002102',
-    settledAt: '2023-01-16',
-    status: '在园',
-    address: '上海市浦东新区海港大道 1555 号 M2 动力站',
-  },
-  {
-    id: 'ent-jinfan',
-    parkId: 'park-lingang',
-    buildingId: 'bld-lg-m1',
-    name: '锦帆物流科技有限公司',
-    creditCode: '91310115MOCK00006X',
-    industry: '供应链',
-    scale: '中型',
-    employeeCount: 130,
-    registeredCapital: '3000 万人民币',
-    legalPerson: '吴帆',
-    contact: '吴帆',
-    phone: '021-58002103',
-    settledAt: '2019-11-08',
-    status: '已迁出',
-    address: '上海市浦东新区海港大道 1555 号（档案保留）',
-  },
-  {
     id: 'ent-puchao',
     parkId: 'park-lingang',
     buildingId: 'bld-lg-m1',
@@ -271,40 +93,6 @@ export const enterprises: Enterprise[] = [
     settledAt: '2021-12-06',
     status: '在园',
     address: '上海市浦东新区海港大道 1555 号 M1 智能厂房',
-  },
-  {
-    id: 'ent-qiming',
-    parkId: 'park-guanggu',
-    buildingId: 'bld-gg-c1',
-    name: '启明医疗器械有限公司',
-    creditCode: '91420100MOCK00007X',
-    industry: '医疗器械',
-    scale: '中型',
-    employeeCount: 156,
-    registeredCapital: '6000 万人民币',
-    legalPerson: '何晚宁',
-    contact: '何晚宁',
-    phone: '027-87003101',
-    settledAt: '2022-05-20',
-    status: '在园',
-    address: '武汉市东湖高新区高新大道 818 号 C1 研发中心',
-  },
-  {
-    id: 'ent-baiyu',
-    parkId: 'park-guanggu',
-    buildingId: 'bld-gg-c2',
-    name: '白屿合成生物有限公司',
-    creditCode: '91420100MOCK00008X',
-    industry: '合成生物',
-    scale: '小型',
-    employeeCount: 54,
-    registeredCapital: '1500 万人民币',
-    legalPerson: '许屿',
-    contact: '许屿',
-    phone: '027-87003102',
-    settledAt: '2026-01-09',
-    status: '待入驻',
-    address: '武汉市东湖高新区高新大道 818 号 C2 中试楼',
   },
   {
     id: 'ent-donghu',
@@ -324,3 +112,32 @@ export const enterprises: Enterprise[] = [
     address: '武汉市东湖高新区高新大道 818 号 C1 研发中心',
   },
 ]
+
+const sharedById = new Map(sharedEnterprises.map((item) => [item.id, item]))
+
+function fromShared(id: string): Enterprise {
+  const item = sharedById.get(id)
+  const profile = profiles[id]
+  if (!item || !profile) throw new Error(`@park/mock 企业 ${id} 无法对齐政府端档案`)
+  return { ...item, ...profile }
+}
+
+/** 顺序与原来的名录一致，方便演示时按滨江筛选仍看到这五家。 */
+const enterpriseOrder = [
+  'ent-xinglan',
+  'ent-qinghe',
+  'ent-luanshu',
+  'ent-chengjiang',
+  'ent-beilu',
+  'ent-haiyi',
+  'ent-yuanneng',
+  'ent-jinfan',
+  'ent-puchao',
+  'ent-qiming',
+  'ent-baiyu',
+  'ent-donghu',
+]
+
+const govById = new Map(govOnly.map((item) => [item.id, item]))
+
+export const enterprises: Enterprise[] = enterpriseOrder.map((id) => govById.get(id) ?? fromShared(id))

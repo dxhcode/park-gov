@@ -1,11 +1,12 @@
+import { filterByParkId, getById } from '@park/mock'
 import { buildings, parks } from './parks'
 
 export function parkOf(id: string) {
-  return parks.find((item) => item.id === id)
+  return getById(parks, id)
 }
 
 export function buildingOf(id: string) {
-  return buildings.find((item) => item.id === id)
+  return getById(buildings, id)
 }
 
 export function parkLabel(id: string) {
@@ -18,7 +19,7 @@ export function buildingLabel(id: string) {
 }
 
 export function buildingsInPark(parkId: string) {
-  return buildings.filter((item) => item.parkId === parkId)
+  return filterByParkId(buildings, parkId)
 }
 
 export function formatArea(sqm: number) {

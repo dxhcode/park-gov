@@ -16,6 +16,12 @@ apps/screen-app    态势大屏，Vite base /park-gov/screen/
 scripts/           Pages 门户、构建、预览、发布
 ```
 
+## 共享包
+
+管理端和大屏通过 pnpm 的 git 子目录依赖使用 [park-shared](https://github.com/dxhcode/park-shared) 的 `@park/theme`、`@park/components`、`@park/mock`，锁定提交 `913bf4d597c1f209dbd7734932f809b5c74ced24`。`pnpm install` 会拉取这三个包并执行各自的 `prepare` 编译，不需要把共享仓库放在同级目录。
+
+主题、登录壳、布局壳、页头、指标、空态、大屏玻璃卡片、图表、跑马灯和示意地图来自共享包。园区、楼宇和八家共有企业来自 `@park/mock`。政府端仍保留自己的演示账号、用房、闲置、其余台账和大屏快照。
+
 ## 本地开发
 
 ```bash
@@ -155,4 +161,4 @@ PAGES_PUBLISH=1 pnpm pages:publish
 
 ## 技术栈
 
-Vue 3、TypeScript、Vue Router、Pinia、ant-design-vue、Vite。管理端登录和各业务台账都是浏览器本地数据。态势大屏用 SVG 和样式动画画地图与图表，不请求接口。
+Vue 3、TypeScript、Vue Router、Pinia、ant-design-vue、Vite，以及 `@park/theme`、`@park/components`、`@park/mock`。管理端登录和各业务台账都是浏览器本地数据，会话键仍是 `park-gov.session`，不用共享库的 `admin` / `operator` 账号。态势大屏的图用共享组件里的 SVG 绘制，不请求接口。

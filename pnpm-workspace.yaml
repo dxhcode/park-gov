@@ -3,3 +3,6 @@ packages:
 
 onlyBuiltDependencies:
   - esbuild
+  - "@park/theme"
+  - "@park/components"
+  - "@park/mock"

@@ -26,9 +26,7 @@ const enterpriseBars = parkNodes.map((item) => ({
     caption="三园产值、企业和告警同屏。点地图上的园区，右侧换成该园摘要。"
   >
     <div class="board">
-      <GlassPanel class="map" title="空间底图" extra="热力随风险与投诉">
-        <ParkMap />
-      </GlassPanel>
+      <ParkMap class="map" title="空间底图" extra="热力随风险与投诉" />
       <GlassPanel title="月度产值" extra="亿元 · 虚构">
         <LineChart :labels="outputLabels" :series="outputSeries" />
       </GlassPanel>
